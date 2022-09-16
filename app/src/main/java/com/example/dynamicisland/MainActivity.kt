@@ -1,12 +1,13 @@
 package com.example.dynamicisland
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings
 import android.widget.Button
+import androidx.appcompat.app.AppCompatActivity
 import com.example.dynamicisland.utils.DynamixSharedPref
 import com.example.dynamicisland.utils.ScreenUtils
+
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

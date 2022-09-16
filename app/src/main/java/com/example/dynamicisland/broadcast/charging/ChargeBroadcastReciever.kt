@@ -12,6 +12,8 @@ object ChargeBroadcastReciever {
     private var listener:ChargingListener? = null
     private var statusFinal = BatteryManager.BATTERY_STATUS_NOT_CHARGING
 
+    private var settingReceiver = true
+
 
     var broadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(p0: Context?, intent: Intent?) {
@@ -20,13 +22,12 @@ object ChargeBroadcastReciever {
 
             if (status == BatteryManager.BATTERY_STATUS_CHARGING && status != statusFinal) {
                 statusFinal = status
-               Toast.makeText(p0,"Charging",Toast.LENGTH_SHORT).show()
-                listener?.onChargeConnected(level)
+                if(!settingReceiver) listener?.onChargeConnected(level)
             } else if ((status == BatteryManager.BATTERY_STATUS_DISCHARGING || status == BatteryManager.BATTERY_STATUS_NOT_CHARGING) && status != statusFinal) {
                 statusFinal = status
-                Toast.makeText(p0,"Discharging",Toast.LENGTH_SHORT).show()
-                listener?.onChargeDisconnected()
+                if(!settingReceiver) listener?.onChargeDisconnected()
             }
+            settingReceiver = false
         }
     }
 

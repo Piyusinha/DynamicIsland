@@ -1,29 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
     <androidx.cardview.widget.CardView
-        android:animateLayoutChanges="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:minWidth="30dp"
         android:minHeight="30dp"
-        app:cardBackgroundColor="@color/black"
-        app:cardCornerRadius="10dp">
+        app:cardCornerRadius="10dp"
+        app:cardBackgroundColor="@color/black">
+    <androidx.constraintlayout.motion.widget.MotionLayout
+        android:id="@+id/constraintLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black"
+        android:minWidth="30dp"
+        android:minHeight="30dp"
+        app:layoutDescription="@xml/parent_layout_xml_constraintlayout_scene">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <include
-                android:visibility="gone"
-                android:id="@+id/charging_layout"
-                layout="@layout/charging_layout"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
+        <include
+            android:id="@+id/charging_layout"
+            layout="@layout/charging_layout"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.motion.widget.MotionLayout>
     </androidx.cardview.widget.CardView>
+
 </layout>
