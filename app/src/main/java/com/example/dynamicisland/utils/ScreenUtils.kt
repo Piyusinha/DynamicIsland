@@ -3,6 +3,7 @@ package com.example.dynamicisland.utils
 import android.app.Activity
 import android.content.Context
 import android.util.DisplayMetrics
+import kotlin.math.roundToInt
 
 class ScreenUtils {
 
@@ -18,4 +19,8 @@ class ScreenUtils {
         activity.windowManager.defaultDisplay.getMetrics(displayMetrics)
         return displayMetrics.heightPixels
     }
+}
+fun Context.dpToPx(dpValue: Float): Int {
+    val displayMetrics = resources.displayMetrics
+    return (dpValue * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT)).roundToInt()
 }

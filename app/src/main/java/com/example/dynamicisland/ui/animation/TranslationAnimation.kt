@@ -1,7 +1,9 @@
 package com.example.dynamicisland.ui.animation
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
-import java.time.Duration
+
 
 class TranslationAnimation() {
 
@@ -21,6 +23,11 @@ class TranslationAnimation() {
         valueAnimator.addUpdateListener {
             listener?.onAnimate(it)
         }
+        valueAnimator.addListener(object : AnimatorListenerAdapter() {
+            override fun onAnimationEnd(animation: Animator) {
+                listener?.onAnimateComplete()
+            }
+        })
         valueAnimator.start()
     }
 

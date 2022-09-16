@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:foregroundGravity="center"
+    android:layout_width="236dp"
+    android:layout_height="wrap_content"
+    android:minHeight="30dp"
+    android:paddingEnd="16dp"
+    android:background="@color/black">
+
+    <TextView
+        android:layout_marginStart="36dp"
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Charging"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/battery"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_chargepercentage_75"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/battery_percentage"
+        android:textColor="@color/green"
+        android:textStyle="bold"
+        android:text="75%"
+        android:textSize="12sp"
+        android:layout_marginEnd="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@id/battery"
+        app:layout_constraintEnd_toStartOf="@id/battery"
+        app:layout_constraintTop_toTopOf="@id/battery" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

@@ -19,9 +19,11 @@ object ChargeBroadcastReciever {
             val status: Int? = intent?.getIntExtra(BatteryManager.EXTRA_STATUS, -1)
 
             if (status == BatteryManager.BATTERY_STATUS_CHARGING && status != statusFinal) {
+                statusFinal = status
                Toast.makeText(p0,"Charging",Toast.LENGTH_SHORT).show()
                 listener?.onChargeConnected(level)
             } else if ((status == BatteryManager.BATTERY_STATUS_DISCHARGING || status == BatteryManager.BATTERY_STATUS_NOT_CHARGING) && status != statusFinal) {
+                statusFinal = status
                 Toast.makeText(p0,"Discharging",Toast.LENGTH_SHORT).show()
                 listener?.onChargeDisconnected()
             }

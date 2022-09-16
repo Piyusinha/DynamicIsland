@@ -4,4 +4,5 @@ import android.animation.ValueAnimator
 
 interface AnimationListener {
     fun onAnimate(animator: ValueAnimator)
+    fun onAnimateComplete()
 }
