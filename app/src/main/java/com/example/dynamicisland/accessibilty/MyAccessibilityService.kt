@@ -4,6 +4,7 @@ import android.accessibilityservice.AccessibilityService
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.IntentFilter
+import android.media.AudioManager
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.WindowManager
@@ -16,6 +17,8 @@ import androidx.databinding.DataBindingUtil
 import com.example.dynamicisland.R
 import com.example.dynamicisland.broadcast.charging.ChargeBroadcastReciever
 import com.example.dynamicisland.broadcast.charging.ChargingListener
+import com.example.dynamicisland.broadcast.ringer.RingerBroadcastReciever
+import com.example.dynamicisland.broadcast.ringer.RingerMode
 import com.example.dynamicisland.databinding.ParentLayoutBinding
 import com.example.dynamicisland.ui.view.DynamicLayoutParams
 import com.example.dynamicisland.utils.DEFAULT_X
@@ -63,6 +66,7 @@ class MyAccessibilityService : AccessibilityService() {
         }
 
         registerReceiver(ChargeBroadcastReciever.broadcastReceiver,IntentFilter(Intent.ACTION_BATTERY_CHANGED))
+        registerReceiver(RingerBroadcastReciever.receiver,IntentFilter(AudioManager.RINGER_MODE_CHANGED_ACTION))
         ChargeBroadcastReciever.setListener(object :ChargingListener{
             override fun onChargeConnected(level: Int?) {
                 rootBinding.constraintLayout2.setTransition(R.id.charging_transition_start)
@@ -73,6 +77,26 @@ class MyAccessibilityService : AccessibilityService() {
                 rootBinding.constraintLayout2.transitionToStart()
                 rootBinding.chargingLayout.root.isVisible = false
             }
+        })
+
+        RingerBroadcastReciever.setListener(object : RingerMode {
+            override fun onVibrate() {
+
+            }
+
+            override fun onGeneral() {
+
+            }
+
+            override fun onSilent() {
+                rootBinding.constraintLayout2.setTransition(R.id.ringer_transition_start)
+                rootBinding.constraintLayout2.transitionToEnd()
+
+//                rootBinding.constraintLayout2.setTransition(R.id.ringer_transition_start)
+//                rootBinding.constraintLayout2.transitionToEnd()
+                startTimer()
+            }
+
         })
     }
 
@@ -87,7 +111,7 @@ class MyAccessibilityService : AccessibilityService() {
         layout.chargingLayout.root.isVisible = true
         layout.chargingLayout.root.alpha = 0f
         layout.chargingLayout.batteryPercentage.text = "$level%"
-        setupBatteryIcon(layout.chargingLayout.battery,level)
+//        setupBatteryIcon(layout.chargingLayout.battery,level)
         layout.chargingLayout.root.animate()
             .alpha(1.0f)
             .setListener(null)
