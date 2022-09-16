@@ -4,6 +4,7 @@ import android.accessibilityservice.AccessibilityService
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.IntentFilter
+import android.graphics.drawable.Drawable
 import android.media.AudioManager
 import android.util.Log
 import android.view.LayoutInflater
@@ -85,19 +86,26 @@ class MyAccessibilityService : AccessibilityService() {
             }
 
             override fun onGeneral() {
-
+                rootBinding.constraintLayout2.setTransition(R.id.ringer_transition_start)
+                inflateRinger(ContextCompat.getDrawable(applicationContext,R.drawable.ic_leftnormal),ContextCompat.getColor(applicationContext,R.color.green_dark),"Ring")
+                rootBinding.constraintLayout2.transitionToEnd()
+                startTimer()
             }
 
             override fun onSilent() {
                 rootBinding.constraintLayout2.setTransition(R.id.ringer_transition_start)
+                inflateRinger(ContextCompat.getDrawable(applicationContext,R.drawable.ic_leftsilent_icon),ContextCompat.getColor(applicationContext,R.color.red),"Silent")
                 rootBinding.constraintLayout2.transitionToEnd()
-
-//                rootBinding.constraintLayout2.setTransition(R.id.ringer_transition_start)
-//                rootBinding.constraintLayout2.transitionToEnd()
                 startTimer()
             }
 
         })
+    }
+
+    private fun inflateRinger(drawable: Drawable?, color: Int, s: String) {
+        rootBinding.ringerChangeLayout.ringerText.setTextColor(color)
+        rootBinding.ringerChangeLayout.ringerText.text = s
+        rootBinding.ringerChangeLayout.icon.setImageDrawable(drawable)
     }
 
     private fun transitionView(view: MotionLayout) {
@@ -111,7 +119,7 @@ class MyAccessibilityService : AccessibilityService() {
         layout.chargingLayout.root.isVisible = true
         layout.chargingLayout.root.alpha = 0f
         layout.chargingLayout.batteryPercentage.text = "$level%"
-//        setupBatteryIcon(layout.chargingLayout.battery,level)
+        setupBatteryIcon(layout.chargingLayout.battery,level)
         layout.chargingLayout.root.animate()
             .alpha(1.0f)
             .setListener(null)
