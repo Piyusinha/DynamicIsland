@@ -4,15 +4,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
 import android.widget.Button
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.dynamicisland.databinding.ActivityMain2Binding
+import com.example.dynamicisland.fragments.SetupNotchPositionFragment
 import com.example.dynamicisland.fragments.WelcomeNotchType
 import com.example.dynamicisland.utils.DynamixSharedPref
 import com.example.dynamicisland.utils.ScreenUtils
 import com.example.dynamicisland.utils.liveData.toFreshLiveData
-import com.example.dynamicisland.viewmodelFactory.ViewModelFactory
 import dagger.android.support.DaggerAppCompatActivity
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
@@ -39,8 +37,11 @@ class MainActivity : DaggerAppCompatActivity() {
         }
         DynamixSharedPref(this).setWidth(ScreenUtils().getScreenWidth(this))
         if (savedInstanceState == null) {
-            changeFragment(WelcomeNotchType.newInstance())
+            supportFragmentManager.apply {
+                beginTransaction().add(R.id.container, WelcomeNotchType.newInstance()).commit()
+            }
         }
+        updateProgress()
         initObserver()
         biding.progress.max = 3
     }
@@ -63,8 +64,16 @@ class MainActivity : DaggerAppCompatActivity() {
     }
 
     override fun onBackPressed() {
+        resetView()
         super.onBackPressed()
         viewModel.count--
         updateProgress()
+    }
+
+    private fun resetView() {
+        val currentFrag = supportFragmentManager.findFragmentById(R.id.container)
+        if(currentFrag is SetupNotchPositionFragment) {
+            currentFrag.onBackPressed()
+        }
     }
 }

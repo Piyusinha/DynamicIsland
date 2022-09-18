@@ -13,6 +13,14 @@ class FragmentRepository(private val sharedPref: DynamixSharedPref,private val c
         sharedPref.setNotchType(type)
     }
 
+    fun getNotch(): Int? {
+        return sharedPref.getNotch()
+    }
+
+    fun setXandY(x:Int,y:Int) {
+        sharedPref.setXandY(x,y)
+    }
+
     fun getNotchList(): MutableList<Any> {
         val mutableList = mutableListOf<Any>()
         NOTCH.values().forEach {

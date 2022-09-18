@@ -10,6 +10,8 @@ class DynamixSharedPref(context: Context?) {
         private const val SHARED_PREF = "DynamicSharedPref"
         private const val SCREEN_SIZE_WIDTH = "screenSizeWidth"
         private const val NOTCH_TYPE = "notch"
+        private const val X = "x"
+        private const val Y = "y"
     }
     private var mSharedPref: SharedPreferences? = context?.getSharedPreferences(SHARED_PREF, Activity.MODE_PRIVATE)
 
@@ -33,4 +35,21 @@ class DynamixSharedPref(context: Context?) {
         return if(mSharedPref?.contains(NOTCH_TYPE) == true) mSharedPref?.getInt(NOTCH_TYPE,0)
         else null
     }
+
+    fun setXandY(x: Int, y: Int) {
+        val prefsEditor = mSharedPref?.edit()
+        prefsEditor?.putInt(X, x)
+        prefsEditor?.putInt(Y,y)
+        prefsEditor?.apply()
+    }
+    fun getX(): Int {
+        return if(mSharedPref?.contains(X) == true) mSharedPref?.getInt(X,0) ?: 0
+        else 0
+    }
+
+    fun getY(): Int {
+        return if(mSharedPref?.contains(Y) == true) mSharedPref?.getInt(Y,0) ?: 0
+        else 0
+    }
+
 }

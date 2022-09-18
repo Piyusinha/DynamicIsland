@@ -17,6 +17,14 @@ class FragmentsViewModel @Inject constructor(private val repository: FragmentRep
         repository.setNotchType(notch)
     }
 
+    fun getSavedNotch(): Int? {
+       return repository.getNotch()
+    }
+
+    fun setXandY(x:Int,y:Int) {
+        repository.setXandY(x,y)
+    }
+
     fun getNotchList() {
         _listMLD.value = repository.getNotchList()
     }

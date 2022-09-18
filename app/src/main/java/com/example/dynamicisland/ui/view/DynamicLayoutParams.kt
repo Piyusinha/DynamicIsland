@@ -23,4 +23,16 @@ object DynamicLayoutParams {
         }
         
     }
+    fun getActivityLayoutParams(x:Int, y:Int, width:Int, height: Int,gravityVal: Int = Gravity.TOP or Gravity.LEFT): WindowManager.LayoutParams {
+        return WindowManager.LayoutParams().apply {
+            this.x = x
+            this.y = y
+            this.width = width
+            this.height = height
+            gravity = gravityVal
+            format = PixelFormat.OPAQUE
+            flags = LAYOUT_FLAG
+        }
+
+    }
 }
