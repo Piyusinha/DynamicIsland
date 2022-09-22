@@ -38,4 +38,27 @@ class FragmentRepository(private val sharedPref: DynamixSharedPref,private val c
         }
         return null
     }
+
+    fun getX(): Int {
+       return sharedPref.getX()
+    }
+
+    fun getY(): Int {
+        return sharedPref.getY()
+    }
+
+    fun setRadius(radius: Float) {
+        sharedPref.setRadius(radius)
+    }
+
+    fun setDimension(dimension: Float) {
+        sharedPref.setMinDimension(dimension)
+    }
+    fun getRadius(): Float {
+        return sharedPref.getRadius()
+    }
+
+    fun getDimension(): Float {
+        return sharedPref.getDimension()
+    }
 }

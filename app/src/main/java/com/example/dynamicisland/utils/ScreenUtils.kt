@@ -24,3 +24,8 @@ fun Context.dpToPx(dpValue: Float): Int {
     val displayMetrics = resources.displayMetrics
     return (dpValue * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT)).roundToInt()
 }
+fun Context.pxTodp(pxValue: Float): Int {
+    val displayMetrics = resources.displayMetrics
+    return (pxValue / (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT)).roundToInt()
+
+}

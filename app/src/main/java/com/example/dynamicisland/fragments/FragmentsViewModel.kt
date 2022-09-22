@@ -1,5 +1,6 @@
 package com.example.dynamicisland.fragments
 
+import android.view.Gravity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -25,6 +26,14 @@ class FragmentsViewModel @Inject constructor(private val repository: FragmentRep
         repository.setXandY(x,y)
     }
 
+    fun getX(): Int {
+        return repository.getX()
+    }
+
+    fun getY(): Int {
+        return repository.getY()
+    }
+
     fun getNotchList() {
         _listMLD.value = repository.getNotchList()
     }
@@ -44,6 +53,30 @@ class FragmentsViewModel @Inject constructor(private val repository: FragmentRep
         return ((listMLD.value?.firstOrNull() {
             it is NotchTypeData && it.isSelected
         }) as? NotchTypeData)?.notch
+    }
+
+    fun getGravity(): Int {
+        when(getSavedNotch()) {
+            0 -> return Gravity.TOP or Gravity.LEFT
+            1 -> return Gravity.TOP or Gravity.RIGHT
+            2,3 -> return Gravity.TOP or Gravity.CENTER
+        }
+        return -1
+    }
+
+    fun setDimension(dimension: Float) {
+        repository.setDimension(dimension)
+    }
+
+    fun setRadius(radius: Float) {
+        repository.setRadius(radius)
+    }
+    fun getRadius(): Float {
+        return repository.getRadius()
+    }
+
+    fun getDimension(): Float {
+        return repository.getDimension()
     }
 
 }

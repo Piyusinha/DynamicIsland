@@ -12,6 +12,8 @@ class DynamixSharedPref(context: Context?) {
         private const val NOTCH_TYPE = "notch"
         private const val X = "x"
         private const val Y = "y"
+        private const val DIMENSION = "dimension"
+        private const val RADIUS = "radius"
     }
     private var mSharedPref: SharedPreferences? = context?.getSharedPreferences(SHARED_PREF, Activity.MODE_PRIVATE)
 
@@ -50,6 +52,26 @@ class DynamixSharedPref(context: Context?) {
     fun getY(): Int {
         return if(mSharedPref?.contains(Y) == true) mSharedPref?.getInt(Y,0) ?: 0
         else 0
+    }
+
+    fun setMinDimension(dimension: Float) {
+        val prefsEditor = mSharedPref?.edit()
+        prefsEditor?.putFloat(DIMENSION, dimension)
+        prefsEditor?.apply()
+    }
+
+    fun setRadius(radius: Float) {
+        val prefsEditor = mSharedPref?.edit()
+        prefsEditor?.putFloat(RADIUS, radius)
+        prefsEditor?.apply()
+    }
+    fun getRadius(): Float {
+        return if(mSharedPref?.contains(RADIUS) == true) mSharedPref?.getFloat(RADIUS,0f) ?: 0f
+        else 0f
+    }
+    fun getDimension(): Float {
+        return if(mSharedPref?.contains(DIMENSION) == true) mSharedPref?.getFloat(DIMENSION,0f) ?: 0f
+        else 0f
     }
 
 }

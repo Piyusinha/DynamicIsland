@@ -11,15 +11,19 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.CompoundButton
+import androidx.cardview.widget.CardView
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import com.example.dynamicisland.MainActivityViewModel
 import com.example.dynamicisland.R
 import com.example.dynamicisland.application.DynamicApplication
 import com.example.dynamicisland.databinding.DefaultNotchViewBinding
 import com.example.dynamicisland.databinding.FragmentSetupNotchPositionBinding
 import com.example.dynamicisland.ui.view.DynamicLayoutParams
 import com.example.dynamicisland.utils.DEFAULT_X
+import com.example.dynamicisland.utils.dpToPx
+import com.example.dynamicisland.utils.pxTodp
 import com.example.dynamicisland.view.WindowsViewInflater
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
@@ -40,7 +44,13 @@ class SetupNotchPositionFragment : DaggerFragment() {
 
     private var x = 0
     private var y = 0
+    private var size = 0f
+    private var radius = 0f
     private var defaultLayoutParams : WindowManager.LayoutParams? = null
+
+    private val sharedViewModel by lazy {
+        ViewModelProvider(requireActivity(),viewModelFactory)[MainActivityViewModel::class.java]
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,7 +62,7 @@ class SetupNotchPositionFragment : DaggerFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        defaultLayoutParams = DynamicLayoutParams.getActivityLayoutParams(x,y, WindowManager.LayoutParams.WRAP_CONTENT,WindowManager.LayoutParams.WRAP_CONTENT,getGravity())
+        defaultLayoutParams = DynamicLayoutParams.getActivityLayoutParams(x,y, WindowManager.LayoutParams.WRAP_CONTENT,WindowManager.LayoutParams.WRAP_CONTENT,viewModel.getGravity())
         initViewListener()
         initArrowClickListener()
         initClickListener()
@@ -61,6 +71,9 @@ class SetupNotchPositionFragment : DaggerFragment() {
     private fun initClickListener() {
         binding.confirmPosition.setOnClickListener {
             viewModel.setXandY(x,y)
+            viewModel.setDimension(binding.sliderSeekbar.position * 100)
+            viewModel.setRadius(binding.sliderSeekbarRadius.position * 100)
+            binding.switchView.isChecked = false
         }
     }
 
@@ -93,6 +106,7 @@ class SetupNotchPositionFragment : DaggerFragment() {
                 if(p1) {
                     setupNotchView()
                     binding.arrowView.isVisible = true
+                    initViewValues()
                 }else {
                     windowsView?.removeView()
                     binding.arrowView.isVisible = false
@@ -102,20 +116,14 @@ class SetupNotchPositionFragment : DaggerFragment() {
         })
     }
 
+
+    lateinit var notchViewBinding : DefaultNotchViewBinding
+
     private fun setupNotchView() {
         val li = activity?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        val rootBinding = DataBindingUtil.inflate<DefaultNotchViewBinding>(li,R.layout.default_notch_view,null,false)
-        windowsView =  WindowsViewInflater(activity,rootBinding.root)
+        notchViewBinding = DataBindingUtil.inflate<DefaultNotchViewBinding>(li,R.layout.default_notch_view,null,false)
+        windowsView =  WindowsViewInflater(activity,notchViewBinding.root)
         windowsView?.addView(defaultLayoutParams)
-    }
-
-    private fun getGravity(): Int {
-        when(viewModel.getSavedNotch()) {
-            0 -> return Gravity.TOP or Gravity.LEFT
-            1 -> return Gravity.TOP or Gravity.RIGHT
-            2,3 -> return Gravity.TOP or Gravity.CENTER
-        }
-        return -1
     }
 
     companion object {
@@ -126,6 +134,28 @@ class SetupNotchPositionFragment : DaggerFragment() {
 
     fun onBackPressed() {
         windowsView?.removeView()
-        binding.arrowView.isVisible = true
+        binding.arrowView.isVisible = false
     }
+
+    private fun initViewValues() {
+        size = (context?.pxTodp(notchViewBinding.root.minimumWidth.toFloat())?.toFloat() ?: 0f)
+        binding.sliderSeekbar.position = size /100
+        radius = (context?.pxTodp((notchViewBinding.root as? CardView)?.radius ?: 0f )?.toFloat() ?: 0f)
+        binding.sliderSeekbarRadius.position = radius/100
+
+        iniPositionListner()
+    }
+
+    private fun iniPositionListner() {
+        binding.sliderSeekbar.positionListener = { p ->
+            size = requireContext().dpToPx(p*100).toFloat()
+            notchViewBinding.root.minimumWidth = size.toInt()
+            notchViewBinding.root.minimumHeight = size.toInt()
+        }
+        binding.sliderSeekbarRadius.positionListener = { p ->
+            radius = requireContext().dpToPx(p*100).toFloat()
+            (notchViewBinding.root as? CardView)?.radius = radius
+        }
+    }
+
 }
