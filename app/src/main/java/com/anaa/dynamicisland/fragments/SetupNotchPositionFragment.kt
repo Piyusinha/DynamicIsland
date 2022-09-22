@@ -83,12 +83,20 @@ class SetupNotchPositionFragment : DaggerFragment() {
             windowsView?.updateView(defaultLayoutParams)
         }
         binding.left.setOnClickListener {
-            x--
+            if(viewModel.getSavedNotch() == 1) {
+                x++
+            }else {
+                x--
+            }
             defaultLayoutParams?.x = x
             windowsView?.updateView(defaultLayoutParams)
         }
         binding.right.setOnClickListener {
-            x++
+            if(viewModel.getSavedNotch() == 1) {
+                x--
+            }else {
+                x++
+            }
             defaultLayoutParams?.x = x
             windowsView?.updateView(defaultLayoutParams)
         }

@@ -43,7 +43,7 @@ class MainActivity : DaggerAppCompatActivity() {
         }
         updateProgress()
         initObserver()
-        biding.progress.max = 3
+        biding.progress.max = 2
     }
 
     private fun initObserver() {
