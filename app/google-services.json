@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "126005143575",
+    "project_id": "dynamic-island-de94e",
+    "storage_bucket": "dynamic-island-de94e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:126005143575:android:5896cc881469f97995d452",
+        "android_client_info": {
+          "package_name": "com.anaa.dynamicisland"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "126005143575-p3esb3ajrvvtehpofrlnfh5ohb823tvk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCiUtsvqYmaJ_R3bnM8X12_hip8bXoVzYk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "126005143575-p3esb3ajrvvtehpofrlnfh5ohb823tvk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
