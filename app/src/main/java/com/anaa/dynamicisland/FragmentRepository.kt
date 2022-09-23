@@ -60,4 +60,12 @@ class FragmentRepository(private val sharedPref: DynamixSharedPref,private val c
     fun getDimension(): Float {
         return sharedPref.getDimension()
     }
+
+    fun setupDone(b: Boolean) {
+        sharedPref.setupDone(b)
+    }
+
+    fun isSetupComplete(): Boolean {
+        return sharedPref.getSetup()
+    }
 }

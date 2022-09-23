@@ -1,6 +1,7 @@
 package com.anaa.dynamicisland.fragments
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +16,7 @@ import com.anaa.dynamicisland.MainActivityViewModel
 import com.anaa.dynamicisland.R
 import com.anaa.dynamicisland.databinding.DefaultNotchViewBinding
 import com.anaa.dynamicisland.databinding.FragmentSetupNotchPositionBinding
+import com.anaa.dynamicisland.ui.activity.IslandActivity
 import com.anaa.dynamicisland.ui.view.DynamicLayoutParams
 import com.anaa.dynamicisland.utils.dpToPx
 import com.anaa.dynamicisland.utils.pxTodp
@@ -65,9 +67,11 @@ class SetupNotchPositionFragment : DaggerFragment() {
     private fun initClickListener() {
         binding.confirmPosition.setOnClickListener {
             viewModel.setXandY(x,y)
-            viewModel.setDimension(binding.sliderSeekbar.position * 100)
-            viewModel.setRadius(binding.sliderSeekbarRadius.position * 100)
+            viewModel.setDimension(size)
+            viewModel.setRadius(radius)
             binding.switchView.isChecked = false
+            viewModel.setupDone(true)
+            startActivity(Intent(activity,IslandActivity::class.java))
         }
     }
 

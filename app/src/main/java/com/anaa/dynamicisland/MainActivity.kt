@@ -1,9 +1,12 @@
 package com.anaa.dynamicisland
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import android.widget.Button
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.ViewModelProvider
 import com.anaa.dynamicisland.databinding.ActivityMain2Binding
 import com.anaa.dynamicisland.fragments.SetupNotchPositionFragment
@@ -27,6 +30,13 @@ class MainActivity : DaggerAppCompatActivity() {
         ViewModelProvider(this,viewModelFactory)[MainActivityViewModel::class.java]
     }
 
+    private var activityOverlayResult: ActivityResultLauncher<Intent> = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()) { result ->
+        if(Settings.canDrawOverlays(this)) {
+
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         biding =  ActivityMain2Binding.inflate(layoutInflater)
@@ -48,7 +58,16 @@ class MainActivity : DaggerAppCompatActivity() {
 
     private fun initObserver() {
         viewModel.changeFragment.toFreshLiveData().observe(this) {
-            changeFragment(it)
+            if (!Settings.canDrawOverlays(this)) {
+                val intent = Intent(
+                    Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                    Uri.parse("package:$packageName")
+                )
+                activityOverlayResult.launch(intent)
+            } else{
+                changeFragment(it)
+            }
+
         }
     }
 

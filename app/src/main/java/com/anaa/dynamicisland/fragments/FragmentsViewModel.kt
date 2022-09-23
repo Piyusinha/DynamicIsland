@@ -79,4 +79,12 @@ class FragmentsViewModel @Inject constructor(private val repository: FragmentRep
         return repository.getDimension()
     }
 
+    fun setupDone(b: Boolean) {
+        repository.setupDone(b)
+    }
+
+    fun isSetupDone(): Boolean {
+        return repository.isSetupComplete()
+    }
+
 }

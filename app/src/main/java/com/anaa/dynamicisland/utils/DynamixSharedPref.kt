@@ -14,6 +14,7 @@ class DynamixSharedPref(context: Context?) {
         private const val Y = "y"
         private const val DIMENSION = "dimension"
         private const val RADIUS = "radius"
+        private const val SETUP = "setup"
     }
     private var mSharedPref: SharedPreferences? = context?.getSharedPreferences(SHARED_PREF, Activity.MODE_PRIVATE)
 
@@ -72,6 +73,16 @@ class DynamixSharedPref(context: Context?) {
     fun getDimension(): Float {
         return if(mSharedPref?.contains(DIMENSION) == true) mSharedPref?.getFloat(DIMENSION,0f) ?: 0f
         else 0f
+    }
+
+    fun setupDone(b: Boolean) {
+        val prefsEditor = mSharedPref?.edit()
+        prefsEditor?.putBoolean(SETUP, b)
+        prefsEditor?.apply()
+    }
+    fun getSetup(): Boolean {
+        return if(mSharedPref?.contains(SETUP) == true) mSharedPref?.getBoolean(SETUP,false) ?: false
+        else false
     }
 
 }
