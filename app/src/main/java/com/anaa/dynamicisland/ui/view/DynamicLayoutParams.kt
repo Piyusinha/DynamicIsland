@@ -30,9 +30,8 @@ object DynamicLayoutParams {
             this.width = width
             this.height = height
             gravity = gravityVal
-            format = PixelFormat.OPAQUE
-            flags =
-                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH or WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
+            format = PixelFormat.TRANSLUCENT
+
         }
 
     }
