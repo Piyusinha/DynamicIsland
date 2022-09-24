@@ -9,6 +9,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.ViewModelProvider
 import com.anaa.dynamicisland.databinding.ActivityMain2Binding
+import com.anaa.dynamicisland.fragments.PermissionFragment
 import com.anaa.dynamicisland.fragments.SetupNotchPositionFragment
 import com.anaa.dynamicisland.fragments.WelcomeNotchType
 import com.anaa.dynamicisland.utils.DynamixSharedPref
@@ -48,7 +49,7 @@ class MainActivity : DaggerAppCompatActivity() {
         DynamixSharedPref(this).setWidth(ScreenUtils().getScreenWidth(this))
         if (savedInstanceState == null) {
             supportFragmentManager.apply {
-                beginTransaction().add(R.id.container, WelcomeNotchType.newInstance()).commit()
+                beginTransaction().add(R.id.container, PermissionFragment.newInstance()).commit()
             }
         }
         updateProgress()
@@ -58,16 +59,7 @@ class MainActivity : DaggerAppCompatActivity() {
 
     private fun initObserver() {
         viewModel.changeFragment.toFreshLiveData().observe(this) {
-            if (!Settings.canDrawOverlays(this)) {
-                val intent = Intent(
-                    Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                    Uri.parse("package:$packageName")
-                )
-                activityOverlayResult.launch(intent)
-            } else{
-                changeFragment(it)
-            }
-
+           changeFragment(it)
         }
     }
 

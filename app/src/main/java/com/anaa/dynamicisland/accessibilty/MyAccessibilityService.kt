@@ -50,6 +50,10 @@ class MyAccessibilityService : AccessibilityService() {
     }
 
     override fun onServiceConnected() {
+
+    }
+
+    private fun onEnabled() {
         job = SupervisorJob()
         scope = CoroutineScope(Dispatchers.Main + job)
 

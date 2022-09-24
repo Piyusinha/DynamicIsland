@@ -1,5 +1,6 @@
 package com.anaa.dynamicisland.di
 
+import com.anaa.dynamicisland.fragments.PermissionFragment
 import com.anaa.dynamicisland.fragments.SetupNotchPositionFragment
 import com.anaa.dynamicisland.fragments.WelcomeNotchType
 import dagger.Module
@@ -14,4 +15,7 @@ abstract class FragmentBuildersModule {
 
     @ContributesAndroidInjector
     abstract fun contributeNotchPositionFragment(): SetupNotchPositionFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributePermissionFragment(): PermissionFragment
 }
