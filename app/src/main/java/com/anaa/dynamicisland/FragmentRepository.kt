@@ -68,4 +68,12 @@ class FragmentRepository(private val sharedPref: DynamixSharedPref,private val c
     fun isSetupComplete(): Boolean {
         return sharedPref.getSetup()
     }
+
+    fun isManuallyChanged(): Boolean {
+        return sharedPref.isManuallyChanged()
+    }
+
+    fun setManually(boolean: Boolean) {
+       sharedPref.setMannualyChanges(boolean)
+    }
 }

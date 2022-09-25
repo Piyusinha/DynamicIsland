@@ -15,6 +15,7 @@ class DynamixSharedPref(context: Context?) {
         private const val DIMENSION = "dimension"
         private const val RADIUS = "radius"
         private const val SETUP = "setup"
+        private const val MANUALLY = "manually"
     }
     private var mSharedPref: SharedPreferences? = context?.getSharedPreferences(SHARED_PREF, Activity.MODE_PRIVATE)
 
@@ -83,6 +84,16 @@ class DynamixSharedPref(context: Context?) {
     fun getSetup(): Boolean {
         return if(mSharedPref?.contains(SETUP) == true) mSharedPref?.getBoolean(SETUP,false) ?: false
         else false
+    }
+
+    fun isManuallyChanged(): Boolean {
+        return if(mSharedPref?.contains(MANUALLY) == true) mSharedPref?.getBoolean(MANUALLY,false) ?: false
+        else false
+    }
+    fun setMannualyChanges(set:Boolean){
+        val prefsEditor = mSharedPref?.edit()
+        prefsEditor?.putBoolean(MANUALLY, set)
+        prefsEditor?.apply()
     }
 
 }

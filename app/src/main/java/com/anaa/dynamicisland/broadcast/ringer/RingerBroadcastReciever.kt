@@ -9,7 +9,7 @@ import android.media.AudioManager
 object RingerBroadcastReciever {
     private var statusFinal = AudioManager.RINGER_MODE_NORMAL
     private var listener : RingerMode? = null
-    private var settingReceiver = true
+    var settingReceiver = true
 
 
     var receiver: BroadcastReceiver = object : BroadcastReceiver() {

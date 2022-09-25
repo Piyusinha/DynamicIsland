@@ -36,4 +36,12 @@ class IslandViewModel @Inject constructor(private val repository: FragmentReposi
     fun isSetupDone(): Boolean {
         return repository.isSetupComplete()
     }
+
+    fun manuallyChanged(): Boolean {
+        return repository.isManuallyChanged()
+    }
+
+    fun setMannuallyChanged(boolean: Boolean) {
+        repository.setManually(boolean)
+    }
 }

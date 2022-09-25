@@ -74,6 +74,7 @@ class SetupNotchPositionFragment : DaggerFragment() {
             viewModel.setupDone(true)
             AccessbilityStaticClass.service?.removeView()
             startActivity(Intent(activity,IslandActivity::class.java))
+            activity?.finish()
         }
     }
 

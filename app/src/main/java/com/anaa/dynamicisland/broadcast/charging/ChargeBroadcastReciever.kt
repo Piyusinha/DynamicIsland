@@ -11,7 +11,7 @@ object ChargeBroadcastReciever {
     private var listener:ChargingListener? = null
     private var statusFinal = BatteryManager.BATTERY_STATUS_NOT_CHARGING
 
-    private var settingReceiver = true
+    var settingReceiver = true
 
 
     var broadcastReceiver = object : BroadcastReceiver() {

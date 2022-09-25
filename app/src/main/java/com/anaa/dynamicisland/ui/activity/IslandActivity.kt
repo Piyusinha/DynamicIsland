@@ -94,10 +94,12 @@ class IslandActivity : DaggerAppCompatActivity() {
             }
             binding.demo.isEnabled = true
             binding.ringerDemo.isEnabled = true
+            viewModel.setMannuallyChanged(true)
             AccessbilityStaticClass.service?.enableView()
         } else {
             binding.demo.isEnabled = false
             binding.ringerDemo.isEnabled = false
+            viewModel.setMannuallyChanged(true)
             AccessbilityStaticClass.service?.removeView()
         }
     }
@@ -125,12 +127,12 @@ class IslandActivity : DaggerAppCompatActivity() {
     override fun onResume() {
         super.onResume()
         binding.dynamicSwitch.setOnCheckedChangeListener { _, _ -> null  }
-        if(checkAccessibilityPermission()) {
+        if(checkAccessibilityPermission() && !viewModel.manuallyChanged()) {
             binding.dynamicSwitch.isChecked = true
             binding.demo.isEnabled = true
             binding.ringerDemo.isEnabled = true
             AccessbilityStaticClass.service?.enableView()
-        }else{
+        }else if(!checkAccessibilityPermission()){
             binding.dynamicSwitch.isChecked = false
             binding.demo.isEnabled = false
             binding.ringerDemo.isEnabled = false

@@ -31,15 +31,7 @@ fun defaultIsland(size: Size = Size(80.dp.value, 22.dp.value), roundedCorner: In
             .width(size.width.dp)
             .background(Color.Black, shape = RoundedCornerShape(roundedCorner.dp))
     ) {
-        val island = createRef()
-        Image(painter = painterResource(R.drawable.xcross),
-            contentDescription = null,
-            modifier = Modifier.constrainAs(island) {
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
-                top.linkTo(parent.top)
-                bottom.linkTo(parent.bottom)
-            })
+
     }
 }
 

@@ -187,8 +187,9 @@ class ComposeAccessibiltyService : AccessibilityService() {
 
     fun removeView() {
         windowsViewInflater.removeView(notchViewHolder.view)
-        AccessbilityStaticClass.service = null
         viewAdded = false
+        ChargeBroadcastReciever.settingReceiver = true
+        RingerBroadcastReciever.settingReceiver = true
     }
 
     private fun getGravity(): Int {
@@ -218,6 +219,9 @@ class ComposeAccessibiltyService : AccessibilityService() {
         unregisterReceiver(ChargeBroadcastReciever.broadcastReceiver)
         unregisterReceiver(RingerBroadcastReciever.receiver)
         viewAdded = false
+        AccessbilityStaticClass.service = null
+        ChargeBroadcastReciever.settingReceiver = true
+        RingerBroadcastReciever.settingReceiver = true
         return super.onUnbind(intent)
     }
 
