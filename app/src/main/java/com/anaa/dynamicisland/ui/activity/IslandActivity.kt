@@ -2,35 +2,29 @@ package com.anaa.dynamicisland.ui.activity
 
 import android.Manifest
 import android.accessibilityservice.AccessibilityServiceInfo
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.view.LayoutInflater
 import android.view.WindowManager
 import android.view.accessibility.AccessibilityManager
 import android.widget.ImageView
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.ActivityResultCallback
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
-import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.anaa.dynamicisland.AccessbilityStaticClass
+import com.anaa.dynamicisland.BuildConfig
 import com.anaa.dynamicisland.MainActivity
 import com.anaa.dynamicisland.R
 import com.anaa.dynamicisland.databinding.ActivityIslandBinding
 import com.anaa.dynamicisland.databinding.ParentLayoutBinding
-import com.anaa.dynamicisland.ui.compose.IslandState
 import com.anaa.dynamicisland.ui.compose.utils.NotchIslandStateSealedClass
-import com.anaa.dynamicisland.ui.view.DynamicLayoutParams
+import com.google.firebase.FirebaseException
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import dagger.android.support.DaggerAppCompatActivity
+import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -55,24 +49,56 @@ class IslandActivity : DaggerAppCompatActivity() {
         setContentView(binding.root)
         if(viewModel.isSetupDone()) {
             initClickListener()
-
         }else{
             startActivity(Intent(this,MainActivity::class.java))
             finish()
         }
-
+        binding.version.text = BuildConfig.VERSION_NAME
     }
 
     private fun initClickListener() {
         binding.demo.setOnClickListener {
-            AccessbilityStaticClass.service?.updateState(NotchIslandStateSealedClass.ChargingNotch(0,null))
+            try {
+                lifecycleScope.coroutineContext.cancelChildren()
+                AccessbilityStaticClass.service?.updateState(NotchIslandStateSealedClass.ChargingNotch(0,null))
+                startTimer()
+            }catch (e:Exception) {
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+
         }
-        binding.startAccessbilty.setOnClickListener {
+        binding.ringerDemo.setOnClickListener {
+            try {
+                lifecycleScope.coroutineContext.cancelChildren()
+                AccessbilityStaticClass.service?.updateState(NotchIslandStateSealedClass.RingerNotch("Ring",R.drawable.ic_leftnormal))
+                startTimer()
+            }catch (e:Exception) {
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+
+        }
+        binding.dynamicSwitch.setOnCheckedChangeListener { _, b -> setupChangeListener(b)}
+    }
+
+    private fun setupChangeListener(b: Boolean) {
+        if(b) {
             if(!checkAccessibilityPermission()) {
                 startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
-                return@setOnClickListener
+                val am = getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager?
+                am!!.addAccessibilityStateChangeListener { b ->
+                    if(b) {
+                        startActivity(Intent(this,IslandActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK))
+                    }
+                }
+                return
             }
-           AccessbilityStaticClass.service?.enableView()
+            binding.demo.isEnabled = true
+            binding.ringerDemo.isEnabled = true
+            AccessbilityStaticClass.service?.enableView()
+        } else {
+            binding.demo.isEnabled = false
+            binding.ringerDemo.isEnabled = false
+            AccessbilityStaticClass.service?.removeView()
         }
     }
 
@@ -89,40 +115,27 @@ class IslandActivity : DaggerAppCompatActivity() {
         return isAccessibilityEnabled
     }
 
-    private lateinit var rootBinding : ParentLayoutBinding
-    private lateinit var windowsManager : WindowManager
-
-    private lateinit var defaultLayoutParams : WindowManager.LayoutParams
-
-    private fun inflateChargeLayout(level: Int?, layout: ParentLayoutBinding) {
-        rootBinding.constraintLayout2.transitionToEnd()
-        layout.chargingLayout.root.isVisible = true
-        layout.chargingLayout.root.alpha = 0f
-        layout.chargingLayout.batteryPercentage.text = "$level%"
-        setupBatteryIcon(layout.chargingLayout.battery,level)
-        layout.chargingLayout.root.animate()
-            .alpha(1.0f)
-            .setListener(null)
-            .duration = 1000
-        startTimer()
-
-    }
-
     private fun startTimer() {
         lifecycleScope.launch {
-            delay(2000)
-            rootBinding.constraintLayout2.transitionToStart()
+            delay(3000)
+            AccessbilityStaticClass.service?.updateState(NotchIslandStateSealedClass.DefaultNotch)
         }
     }
 
-    private fun setupBatteryIcon(battery: ImageView, level: Int?) {
-        when(level) {
-            in 90..100 -> battery.setImageDrawable(ContextCompat.getDrawable(applicationContext,R.drawable.ic_chargepercentage_100))
-            in 75..90 -> battery.setImageDrawable(ContextCompat.getDrawable(applicationContext,R.drawable.ic_chargepercentage_75))
-            in 50..75 -> battery.setImageDrawable(ContextCompat.getDrawable(applicationContext,R.drawable.ic_chargepercentage_50))
-            in 20..50 -> battery.setImageDrawable(ContextCompat.getDrawable(applicationContext,R.drawable.ic_chargepercentage_25))
-            in 0..20 -> battery.setImageDrawable(ContextCompat.getDrawable(applicationContext,R.drawable.ic_chargepercentage_0))
-        }
+    override fun onResume() {
+        super.onResume()
+        binding.dynamicSwitch.setOnCheckedChangeListener { _, _ -> null  }
+        if(checkAccessibilityPermission()) {
+            binding.dynamicSwitch.isChecked = true
+            binding.demo.isEnabled = true
+            binding.ringerDemo.isEnabled = true
+            AccessbilityStaticClass.service?.enableView()
+        }else{
+            binding.dynamicSwitch.isChecked = false
+            binding.demo.isEnabled = false
+            binding.ringerDemo.isEnabled = false
 
+        }
+        binding.dynamicSwitch.setOnCheckedChangeListener { _, b -> setupChangeListener(b) }
     }
 }

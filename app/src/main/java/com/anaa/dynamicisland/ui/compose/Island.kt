@@ -23,11 +23,6 @@ import androidx.core.content.ContextCompat
 import com.anaa.dynamicisland.R
 import com.anaa.dynamicisland.ui.compose.utils.NotchIslandStateSealedClass
 
-/**
- * @Author : wyl
- * @Date : 2022/9/14
- * Desc :
- */
 @Composable
 fun defaultIsland(size: Size = Size(80.dp.value, 22.dp.value), roundedCorner: Int) {
     ConstraintLayout(
@@ -37,7 +32,7 @@ fun defaultIsland(size: Size = Size(80.dp.value, 22.dp.value), roundedCorner: In
             .background(Color.Black, shape = RoundedCornerShape(roundedCorner.dp))
     ) {
         val island = createRef()
-        Image(painter = painterResource(R.drawable.island),
+        Image(painter = painterResource(R.drawable.xcross),
             contentDescription = null,
             modifier = Modifier.constrainAs(island) {
                 start.linkTo(parent.start)

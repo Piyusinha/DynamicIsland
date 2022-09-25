@@ -40,6 +40,8 @@ class ComposeAccessibiltyService : AccessibilityService() {
 
     }
 
+    private var viewAdded = false
+
     lateinit var job: Job
     lateinit var scope : CoroutineScope
 
@@ -78,6 +80,9 @@ class ComposeAccessibiltyService : AccessibilityService() {
 
 
     fun enableView() {
+        if(viewAdded) {
+            return
+        }
         defaultLayoutParams = DynamicLayoutParams.getLayoutParams(sharedPref.getX(),sharedPref.getY(), WindowManager.LayoutParams.WRAP_CONTENT,WindowManager.LayoutParams.WRAP_CONTENT,getGravity())
         job = SupervisorJob()
         scope = CoroutineScope(Dispatchers.Main + job)
@@ -91,6 +96,7 @@ class ComposeAccessibiltyService : AccessibilityService() {
         windowsViewInflater.addView(notchViewHolder.view,defaultLayoutParams)
 
         initBroadCastRecievers()
+        viewAdded = true
 
     }
 
@@ -181,6 +187,8 @@ class ComposeAccessibiltyService : AccessibilityService() {
 
     fun removeView() {
         windowsViewInflater.removeView(notchViewHolder.view)
+        AccessbilityStaticClass.service = null
+        viewAdded = false
     }
 
     private fun getGravity(): Int {
@@ -209,6 +217,7 @@ class ComposeAccessibiltyService : AccessibilityService() {
     override fun onUnbind(intent: Intent?): Boolean {
         unregisterReceiver(ChargeBroadcastReciever.broadcastReceiver)
         unregisterReceiver(RingerBroadcastReciever.receiver)
+        viewAdded = false
         return super.onUnbind(intent)
     }
 
