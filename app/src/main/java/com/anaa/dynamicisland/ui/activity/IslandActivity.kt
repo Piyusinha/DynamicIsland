@@ -20,6 +20,7 @@ import com.anaa.dynamicisland.MainActivity
 import com.anaa.dynamicisland.R
 import com.anaa.dynamicisland.databinding.ActivityIslandBinding
 import com.anaa.dynamicisland.databinding.ParentLayoutBinding
+import com.anaa.dynamicisland.fragments.SimpleDialog
 import com.anaa.dynamicisland.ui.compose.utils.NotchIslandStateSealedClass
 import com.google.firebase.FirebaseException
 import com.google.firebase.crashlytics.FirebaseCrashlytics
@@ -83,7 +84,7 @@ class IslandActivity : DaggerAppCompatActivity() {
     private fun setupChangeListener(b: Boolean) {
         if(b) {
             if(!checkAccessibilityPermission()) {
-                startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+                startDialogFragment()
                 val am = getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager?
                 am!!.addAccessibilityStateChangeListener { b ->
                     if(b) {
@@ -102,6 +103,22 @@ class IslandActivity : DaggerAppCompatActivity() {
             viewModel.setMannuallyChanged(true)
             AccessbilityStaticClass.service?.removeView()
         }
+    }
+
+
+    private fun startDialogFragment() {
+        SimpleDialog.newInstance("Accessibility", getString(R.string.message)).apply {
+            buttonInterface = object : SimpleDialog.onButtonClick {
+                override fun okClicked() {
+                    startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+                }
+
+                override fun cancelClicked() {
+
+                }
+
+            }
+        }.show(supportFragmentManager, SimpleDialog.TAG)
     }
 
     private fun checkAccessibilityPermission(): Boolean {

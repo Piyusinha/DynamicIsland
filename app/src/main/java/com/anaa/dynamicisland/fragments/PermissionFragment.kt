@@ -61,7 +61,7 @@ class PermissionFragment : DaggerFragment() {
             if(checkAccessibilityPermission()) {
                 return@setOnClickListener
             }
-            startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+            startDialogFragment()
         }
         binding.confirmPosition.setOnClickListener {
             if(!checkAccessibilityPermission()) {
@@ -76,6 +76,21 @@ class PermissionFragment : DaggerFragment() {
                 startActivity(Intent(requireActivity(),MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK))
             }
         }
+    }
+
+    private fun startDialogFragment() {
+        SimpleDialog.newInstance("Accessibility", getString(R.string.message)).apply {
+            buttonInterface = object : SimpleDialog.onButtonClick {
+                override fun okClicked() {
+                    startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+                }
+
+                override fun cancelClicked() {
+
+                }
+
+            }
+        }.show(childFragmentManager, SimpleDialog.TAG)
     }
 
     private fun setupAccesbilityView() {
