@@ -52,29 +52,38 @@ fun defaultIsland(size: Size = Size(80.dp.value, 22.dp.value), roundedCorner: In
 fun chargingIsland(
     isLandState: NotchIslandStateSealedClass.ChargingNotch,
     size: Size = Size(236.dp.value, 30.dp.value),
-    radius: Int = 10
+    radius: Int = 10,
+    notchType: Int
 ) {
     ConstraintLayout(
         modifier = Modifier
             .height(size.height.dp)
             .width(size.width.dp)
             .background(Color.Black, shape = RoundedCornerShape(radius.dp))
-            .padding(0.dp, 0.dp, 16.dp, 0.dp)
+            .padding(0.dp, 0.dp, 0.dp, 0.dp)
     ) {
 
         val (charginText,chargingValue, chargingImage) = createRefs()
 
         Text("Charging", color = Color.White, modifier = Modifier.constrainAs(charginText){
             top.linkTo(parent.top)
-            start.linkTo(parent.start,(size.height + 10).dp)
             bottom.linkTo(parent.bottom)
+            when(notchType) {
+                0 -> start.linkTo(parent.start,(size.height + 10).dp)
+                else -> start.linkTo(parent.start,16.dp)
+            }
+
         })
 
         Image(painter = painterResource(isLandState.drawable ?: R.drawable.ic_chargepercentage_100),
             contentDescription = null,
             contentScale = ContentScale.None,
             modifier = Modifier.constrainAs(chargingImage) {
-                end.linkTo(parent.end)
+                when(notchType) {
+                    0,2 -> end.linkTo(parent.end,16.dp)
+                    1 -> end.linkTo(parent.end,(size.height + 10).dp)
+                }
+
                 top.linkTo(parent.top)
                 bottom.linkTo(parent.bottom)
             })
@@ -89,20 +98,28 @@ fun chargingIsland(
 }
 
 @Composable
-fun RingerIsland(isLandState: NotchIslandStateSealedClass.RingerNotch,size: Size,radius: Int = 10) {
+fun RingerIsland(
+    isLandState: NotchIslandStateSealedClass.RingerNotch,
+    size: Size,
+    radius: Int = 10,
+    notchType: Int
+) {
     ConstraintLayout(
         modifier = Modifier
             .height(size.height.dp)
             .width(size.width.dp)
             .background(Color.Black, shape = RoundedCornerShape(radius.dp))
-            .padding(0.dp, 0.dp, 16.dp, 0.dp)
+            .padding(0.dp, 0.dp,0.dp, 0.dp)
     ) {
         val (text,ringerImage) = createRefs()
         Image(painter = painterResource(isLandState.drawable ?: R.drawable.ic_leftsilent_icon),
             contentDescription = null,
             contentScale = ContentScale.None,
             modifier = Modifier.constrainAs(ringerImage) {
-                start.linkTo(parent.start,(size.height + 10).dp)
+                when(notchType) {
+                    0 -> start.linkTo(parent.start,(size.height + 10).dp)
+                    else -> start.linkTo(parent.start,16.dp)
+                }
                 top.linkTo(parent.top)
                 bottom.linkTo(parent.bottom)
             })
@@ -110,7 +127,10 @@ fun RingerIsland(isLandState: NotchIslandStateSealedClass.RingerNotch,size: Size
         Text(isLandState.text, color = colorResource(id = getFontColor(isLandState.text)), fontSize = 14.sp,fontWeight = FontWeight.Bold, modifier = Modifier.constrainAs(text){
             top.linkTo(parent.top)
             bottom.linkTo(parent.bottom)
-            end.linkTo(parent.end)
+            when(notchType) {
+                0,2 -> end.linkTo(parent.end,16.dp)
+                1 -> end.linkTo(parent.end,(size.height + 10).dp)
+            }
 
         })
     }

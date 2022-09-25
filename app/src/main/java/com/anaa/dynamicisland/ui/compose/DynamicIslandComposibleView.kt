@@ -13,21 +13,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.anaa.dynamicisland.ui.compose.utils.NotchIslandStateSealedClass
 
-@Preview(showSystemUi = true, showBackground = true)
 @Composable
 @ExperimentalAnimationApi
 fun DynamicIslandComposibleView(
     isLandState: NotchIslandStateSealedClass = NotchIslandStateSealedClass.DefaultNotch,
-    defaultSize: Size = Size(20.dp.value,20.dp.value),
-    notchType: Int = 0,
+    defaultSize: Size = Size(20.dp.value, 20.dp.value),
+    notch: Int = 0,
     roundedCorner: Int = 8,
 
-) {
+    ) {
     val transition = updateTransition(
         targetState = isLandState, label = "Island Transition"
     )
@@ -38,6 +36,10 @@ fun DynamicIslandComposibleView(
     }
     val radiusFromSharedPref by remember {
         mutableStateOf(roundedCorner)
+    }
+
+    val notchType by remember {
+        mutableStateOf(notch)
     }
 
     ConstraintLayout(modifier = Modifier.wrapContentSize()) {
@@ -59,8 +61,8 @@ fun DynamicIslandComposibleView(
                 end.linkTo(parent.end)
             }) {
             when (isLandState) {
-                is NotchIslandStateSealedClass.RingerNotch -> RingerIsland(isLandState,size,radiusFromSharedPref)
-                is NotchIslandStateSealedClass.ChargingNotch -> chargingIsland(isLandState,size,radiusFromSharedPref)
+                is NotchIslandStateSealedClass.RingerNotch -> RingerIsland(isLandState,size,radiusFromSharedPref,notchType)
+                is NotchIslandStateSealedClass.ChargingNotch -> chargingIsland(isLandState,size,radiusFromSharedPref,notchType)
                 is NotchIslandStateSealedClass.DefaultNotch -> defaultIsland(size,roundedCorner)
             }
         }

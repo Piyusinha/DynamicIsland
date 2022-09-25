@@ -7,13 +7,10 @@ import android.media.AudioManager
 import android.view.Gravity
 import android.view.WindowManager
 import android.view.accessibility.AccessibilityEvent
-import android.widget.ImageView
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
-import androidx.core.view.isVisible
 import com.anaa.dynamicisland.AccessbilityStaticClass
 import com.anaa.dynamicisland.R
 import com.anaa.dynamicisland.accessibilty.viewModel.ComposeViewModel
@@ -27,13 +24,11 @@ import com.anaa.dynamicisland.ui.compose.IslandState
 import com.anaa.dynamicisland.ui.compose.utils.NotchIslandStateSealedClass
 import com.anaa.dynamicisland.ui.compose.utils.NotchViewHolder
 import com.anaa.dynamicisland.ui.view.DynamicLayoutParams
-import com.anaa.dynamicisland.utils.DEFAULT_X
 import com.anaa.dynamicisland.utils.DynamixSharedPref
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -90,7 +85,7 @@ class ComposeAccessibiltyService : AccessibilityService() {
         notchViewHolder = NotchViewHolder(applicationContext)
         composeViewModel = notchViewHolder.viewModel
         notchViewHolder.view.setContent {
-            DynamicIslandComposibleView(composeViewModel.viewState.value,Size(sharedPref.getDimension().dp.value,sharedPref.getDimension().dp.value),notchType = sharedPref.getNotch(),sharedPref.getRadius().toInt())
+            DynamicIslandComposibleView(composeViewModel.viewState.value,Size(sharedPref.getDimension().dp.value,sharedPref.getDimension().dp.value), notch = sharedPref.getNotch(),sharedPref.getRadius().toInt())
         }
         windowsViewInflater = getSystemService(WINDOW_SERVICE) as WindowManager
         windowsViewInflater.addView(notchViewHolder.view,defaultLayoutParams)
@@ -167,7 +162,12 @@ class ComposeAccessibiltyService : AccessibilityService() {
 
         composeViewModel = notchViewHolder.viewModel
         notchViewHolder.view.setContent {
-            DynamicIslandComposibleView(composeViewModel.viewState.value,composeViewModel.size.value, notchType = sharedPref.getNotch(), roundedCorner = composeViewModel.radius.value)
+            DynamicIslandComposibleView(
+                composeViewModel.viewState.value,
+                composeViewModel.size.value,
+                notch = sharedPref.getNotch(),
+                roundedCorner = composeViewModel.radius.value
+            )
         }
         windowsViewInflater = getSystemService(WINDOW_SERVICE) as WindowManager
         windowsViewInflater.addView(notchViewHolder.view,defaultLayoutParams)
