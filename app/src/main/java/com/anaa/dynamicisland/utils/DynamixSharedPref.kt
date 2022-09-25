@@ -34,9 +34,9 @@ class DynamixSharedPref(context: Context?) {
         prefsEditor?.putInt(NOTCH_TYPE, type.value)
         prefsEditor?.apply()
     }
-    fun getNotch(): Int? {
-        return if(mSharedPref?.contains(NOTCH_TYPE) == true) mSharedPref?.getInt(NOTCH_TYPE,0)
-        else null
+    fun getNotch(): Int {
+        return if(mSharedPref?.contains(NOTCH_TYPE) == true) mSharedPref?.getInt(NOTCH_TYPE,0) ?: 0
+        else 0
     }
 
     fun setXandY(x: Int, y: Int) {

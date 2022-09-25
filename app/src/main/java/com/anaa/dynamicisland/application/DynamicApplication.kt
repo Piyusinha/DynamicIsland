@@ -39,4 +39,8 @@ class DynamicApplication: DaggerApplication() {
             .build()
         applicationComponent.inject(this)
     }
+    fun getMainAppComponent(): AppComponent {
+        return applicationComponent
+    }
+
 }

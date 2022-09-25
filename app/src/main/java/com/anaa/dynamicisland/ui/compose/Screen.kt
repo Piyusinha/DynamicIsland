@@ -30,7 +30,7 @@ fun mainScreen() {
         val (btn, btnHeadSet, btnFace, btnDefault, box) = createRefs()
 
 
-        DynamicIslandComposibleView(isLandState)
+//        DynamicIslandComposibleView(isLandState)
 
         Button(onClick = {
             isLandState = IslandState.DEFAULT

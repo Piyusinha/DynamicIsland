@@ -1,11 +1,9 @@
 package com.anaa.dynamicisland.ui.compose
 
-import androidx.compose.animation.core.Transition
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.animateSize
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.runtime.Composable
@@ -17,43 +15,53 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.ConstrainedLayoutReference
 import androidx.constraintlayout.compose.ConstraintLayout
-import com.anaa.dynamicisland.MainActivityViewModel
+import com.anaa.dynamicisland.ui.compose.utils.NotchIslandStateSealedClass
 
-@Preview
+@Preview(showSystemUi = true, showBackground = true)
 @Composable
+@ExperimentalAnimationApi
 fun DynamicIslandComposibleView(
-    isLandState: IslandState = IslandState.DEFAULT,
+    isLandState: NotchIslandStateSealedClass = NotchIslandStateSealedClass.DefaultNotch,
+    defaultSize: Size = Size(20.dp.value,20.dp.value),
+    notchType: Int = 0,
+    roundedCorner: Int = 8,
+
 ) {
     val transition = updateTransition(
         targetState = isLandState, label = "Island Transition"
     )
 
     var isLandStateInternal by remember { mutableStateOf(isLandState) }
+    val sizeFromSharedPref by remember {
+        mutableStateOf(defaultSize)
+    }
+    val radiusFromSharedPref by remember {
+        mutableStateOf(roundedCorner)
+    }
 
     ConstraintLayout(modifier = Modifier.wrapContentSize()) {
         val box = createRef()
 
         val size by transition.animateSize(label = "Size") { state ->
             when (state) {
-                IslandState.PHONE -> Size(400.dp.value, 70.dp.value)
-                IslandState.AIRPODS -> Size(230.dp.value, 35.dp.value)
-                IslandState.FACE -> Size(180.dp.value, 180.dp.value)
-                IslandState.DEFAULT -> Size(80.dp.value, 22.dp.value)
+                is NotchIslandStateSealedClass.RingerNotch -> Size(150.dp.value, sizeFromSharedPref.height)
+                is NotchIslandStateSealedClass.ChargingNotch-> Size(236.dp.value, sizeFromSharedPref.height)
+                is  NotchIslandStateSealedClass.DefaultNotch -> defaultSize
             }
         }
 
-        Box(modifier = Modifier.size(size.width.dp, size.height.dp).constrainAs(box) {
-            start.linkTo(parent.start)
-            end.linkTo(parent.end)
-            top.linkTo(parent.top, margin = 10.dp)
-        }) {
+        Box(modifier = Modifier
+            .size(size.width.dp, size.height.dp)
+            .constrainAs(box) {
+                start.linkTo(parent.start)
+                top.linkTo(parent.top)
+                end.linkTo(parent.end)
+            }) {
             when (isLandState) {
-                IslandState.PHONE -> phoneIsLand(size)
-                IslandState.AIRPODS -> headsetIsland(size)
-                IslandState.FACE -> faceIsland(size)
-                IslandState.DEFAULT -> defaultIsland(size)
+                is NotchIslandStateSealedClass.RingerNotch -> RingerIsland(isLandState,size,radiusFromSharedPref)
+                is NotchIslandStateSealedClass.ChargingNotch -> chargingIsland(isLandState,size,radiusFromSharedPref)
+                is NotchIslandStateSealedClass.DefaultNotch -> defaultIsland(size,roundedCorner)
             }
         }
     }

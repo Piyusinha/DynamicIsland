@@ -94,5 +94,8 @@ dependencies {
 
     implementation("androidx.constraintlayout:constraintlayout-compose:1.0.0")
 
+    debugImplementation "androidx.customview:customview:1.2.0-alpha01"
+    debugImplementation "androidx.customview:customview-poolingcontainer:1.0.0-alpha01"
+
 
 }

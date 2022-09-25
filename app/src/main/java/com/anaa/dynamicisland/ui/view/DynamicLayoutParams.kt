@@ -10,15 +10,15 @@ object DynamicLayoutParams {
             or WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR)
 
 
-    fun getLayoutParams(x:Int, y:Int, width:Int, height: Int): WindowManager.LayoutParams {
+    fun getLayoutParams(x:Int, y:Int, width:Int, height: Int,gravityVal: Int = Gravity.TOP or Gravity.LEFT): WindowManager.LayoutParams {
         return WindowManager.LayoutParams().apply {
                 this.x = x
                 this.y = y
                 this.width = width
                 this.height = height
                 type = WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY
-                gravity = Gravity.TOP or Gravity.LEFT
-                format = PixelFormat.OPAQUE
+                gravity = gravityVal
+                format = PixelFormat.TRANSPARENT
                 flags = LAYOUT_FLAG
         }
         
@@ -29,6 +29,8 @@ object DynamicLayoutParams {
             this.y = y
             this.width = width
             this.height = height
+            type = WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY
+            flags = LAYOUT_FLAG
             gravity = gravityVal
             format = PixelFormat.TRANSLUCENT
 

@@ -1,24 +1,27 @@
 package com.anaa.dynamicisland.ui.compose
 
+import android.content.Context
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.core.content.ContextCompat
 import com.anaa.dynamicisland.R
+import com.anaa.dynamicisland.ui.compose.utils.NotchIslandStateSealedClass
 
 /**
  * @Author : wyl
@@ -26,10 +29,12 @@ import com.anaa.dynamicisland.R
  * Desc :
  */
 @Composable
-fun defaultIsland(size: Size) {
+fun defaultIsland(size: Size = Size(80.dp.value, 22.dp.value), roundedCorner: Int) {
     ConstraintLayout(
-        modifier = Modifier.height(size.height.dp).width(size.width.dp)
-            .background(Color.Black, shape = RoundedCornerShape(50.dp))
+        modifier = Modifier
+            .height(size.height.dp)
+            .width(size.width.dp)
+            .background(Color.Black, shape = RoundedCornerShape(roundedCorner.dp))
     ) {
         val island = createRef()
         Image(painter = painterResource(R.drawable.island),
@@ -43,113 +48,80 @@ fun defaultIsland(size: Size) {
     }
 }
 
-
 @Composable
-fun phoneIsLand(size: Size) {
-
-
+fun chargingIsland(
+    isLandState: NotchIslandStateSealedClass.ChargingNotch,
+    size: Size = Size(236.dp.value, 30.dp.value),
+    radius: Int = 10
+) {
     ConstraintLayout(
-        modifier = Modifier.height(size.height.dp).width(size.width.dp)
-            .background(Color.Black, shape = RoundedCornerShape(50.dp))
+        modifier = Modifier
+            .height(size.height.dp)
+            .width(size.width.dp)
+            .background(Color.Black, shape = RoundedCornerShape(radius.dp))
+            .padding(0.dp, 0.dp, 16.dp, 0.dp)
     ) {
 
-        val (head, name, type, answer, hangup) = createRefs()
+        val (charginText,chargingValue, chargingImage) = createRefs()
 
-        Image(
-            painter = painterResource(R.drawable.logo),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.constrainAs(head) {
-                start.linkTo(parent.start)
-                top.linkTo(parent.top)
-                bottom.linkTo(parent.bottom)
-            }.padding(start = 10.dp).size(50.dp).clip(CircleShape)
-        )
+        Text("Charging", color = Color.White, modifier = Modifier.constrainAs(charginText){
+            top.linkTo(parent.top)
+            start.linkTo(parent.start,(size.height + 10).dp)
+            bottom.linkTo(parent.bottom)
+        })
 
-        Text("android", modifier = Modifier.constrainAs(type) {
-            start.linkTo(head.end, margin = 5.dp)
-            bottom.linkTo(head.bottom, 5.dp)
-            top.linkTo(head.top)
-        }, style = TextStyle(color = Color.LightGray))
-
-        Text("Android开发那点事儿", modifier = Modifier.constrainAs(name) {
-            start.linkTo(head.end, margin = 5.dp)
-            bottom.linkTo(head.bottom)
-        }, style = TextStyle(color = Color.White))
-
-
-        Image(
-            painter = painterResource(R.drawable.hangup),
+        Image(painter = painterResource(isLandState.drawable ?: R.drawable.ic_chargepercentage_100),
             contentDescription = null,
             contentScale = ContentScale.None,
-            modifier = Modifier.constrainAs(hangup) {
-                end.linkTo(answer.start)
-                top.linkTo(parent.top)
-                bottom.linkTo(parent.bottom)
-            }.padding(start = 10.dp).size(50.dp).clip(CircleShape).background(Color.White)
-        )
-
-
-        Image(
-            painter = painterResource(R.drawable.answer),
-            contentDescription = null,
-            contentScale = ContentScale.None,
-            modifier = Modifier.constrainAs(answer) {
-                end.linkTo(parent.end, margin = 10.dp)
-                top.linkTo(parent.top)
-                bottom.linkTo(parent.bottom)
-            }.padding(start = 10.dp).size(50.dp).clip(CircleShape).background(Color.White)
-        )
-    }
-}
-
-
-@Composable
-fun headsetIsland(size: Size) {
-    ConstraintLayout(
-        modifier = Modifier.height(size.height.dp).width(size.width.dp)
-            .background(Color.Black, shape = RoundedCornerShape(50.dp))
-    ) {
-
-        val (airpods, electric) = createRefs()
-
-        Image(painter = painterResource(R.drawable.airpods),
-            contentDescription = null,
-            contentScale = ContentScale.None,
-            modifier = Modifier.constrainAs(airpods) {
-                top.linkTo(parent.top, 5.dp)
-                bottom.linkTo(parent.bottom)
-                start.linkTo(parent.start, 5.dp)
-            })
-
-
-        Image(painter = painterResource(R.drawable.electric),
-            contentDescription = null,
-            modifier = Modifier.constrainAs(electric) {
-                top.linkTo(parent.top)
-                bottom.linkTo(parent.bottom)
-                end.linkTo(parent.end, margin = 10.dp)
-            })
-    }
-}
-
-@Composable
-fun faceIsland(size: Size) {
-    ConstraintLayout(
-        modifier = Modifier.height(size.height.dp).width(size.width.dp)
-            .background(Color.Black, shape = RoundedCornerShape(40.dp))
-    ) {
-        val (face) = createRefs()
-        Image(painter = painterResource(R.drawable.face),
-            contentDescription = null,
-            contentScale = ContentScale.Fit,
-            modifier = Modifier.constrainAs(face) {
-                start.linkTo(parent.start)
+            modifier = Modifier.constrainAs(chargingImage) {
                 end.linkTo(parent.end)
                 top.linkTo(parent.top)
                 bottom.linkTo(parent.bottom)
             })
+
+
+        Text(isLandState.percentage.toString()+"%", color = Color.Green, fontSize = 12.sp,fontWeight = FontWeight.Bold, modifier = Modifier.constrainAs(chargingValue){
+            top.linkTo(parent.top)
+            end.linkTo(chargingImage.start,8.dp)
+            bottom.linkTo(parent.bottom)
+        })
     }
+}
+
+@Composable
+fun RingerIsland(isLandState: NotchIslandStateSealedClass.RingerNotch,size: Size,radius: Int = 10) {
+    ConstraintLayout(
+        modifier = Modifier
+            .height(size.height.dp)
+            .width(size.width.dp)
+            .background(Color.Black, shape = RoundedCornerShape(radius.dp))
+            .padding(0.dp, 0.dp, 16.dp, 0.dp)
+    ) {
+        val (text,ringerImage) = createRefs()
+        Image(painter = painterResource(isLandState.drawable ?: R.drawable.ic_leftsilent_icon),
+            contentDescription = null,
+            contentScale = ContentScale.None,
+            modifier = Modifier.constrainAs(ringerImage) {
+                start.linkTo(parent.start,(size.height + 10).dp)
+                top.linkTo(parent.top)
+                bottom.linkTo(parent.bottom)
+            })
+
+        Text(isLandState.text, color = colorResource(id = getFontColor(isLandState.text)), fontSize = 14.sp,fontWeight = FontWeight.Bold, modifier = Modifier.constrainAs(text){
+            top.linkTo(parent.top)
+            bottom.linkTo(parent.bottom)
+            end.linkTo(parent.end)
+
+        })
+    }
+}
+
+fun getFontColor(text: String): Int {
+    when(text) {
+        "Ring" -> return R.color.green_dark
+        "Silent" -> return R.color.red
+    }
+    return R.color.black
 }
 
 

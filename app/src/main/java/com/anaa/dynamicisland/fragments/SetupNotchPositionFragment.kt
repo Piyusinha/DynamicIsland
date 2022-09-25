@@ -12,6 +12,7 @@ import androidx.cardview.widget.CardView
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import com.anaa.dynamicisland.AccessbilityStaticClass
 import com.anaa.dynamicisland.MainActivityViewModel
 import com.anaa.dynamicisland.R
 import com.anaa.dynamicisland.databinding.DefaultNotchViewBinding
@@ -71,6 +72,7 @@ class SetupNotchPositionFragment : DaggerFragment() {
             viewModel.setRadius(radius)
             binding.switchView.isChecked = false
             viewModel.setupDone(true)
+            AccessbilityStaticClass.service?.removeView()
             startActivity(Intent(activity,IslandActivity::class.java))
         }
     }
@@ -78,13 +80,11 @@ class SetupNotchPositionFragment : DaggerFragment() {
     private fun initArrowClickListener() {
         binding.down.setOnClickListener {
             y++
-            defaultLayoutParams?.y = y
-            windowsView?.updateView(defaultLayoutParams)
+            AccessbilityStaticClass.service?.updateView(x,y)
         }
         binding.up.setOnClickListener {
             y--
-            defaultLayoutParams?.y = y
-            windowsView?.updateView(defaultLayoutParams)
+            AccessbilityStaticClass.service?.updateView(x,y)
         }
         binding.left.setOnClickListener {
             if(viewModel.getSavedNotch() == 1) {
@@ -92,8 +92,7 @@ class SetupNotchPositionFragment : DaggerFragment() {
             }else {
                 x--
             }
-            defaultLayoutParams?.x = x
-            windowsView?.updateView(defaultLayoutParams)
+            AccessbilityStaticClass.service?.updateView(x,y)
         }
         binding.right.setOnClickListener {
             if(viewModel.getSavedNotch() == 1) {
@@ -101,8 +100,7 @@ class SetupNotchPositionFragment : DaggerFragment() {
             }else {
                 x++
             }
-            defaultLayoutParams?.x = x
-            windowsView?.updateView(defaultLayoutParams)
+            AccessbilityStaticClass.service?.updateView(x,y)
         }
     }
 
@@ -110,7 +108,7 @@ class SetupNotchPositionFragment : DaggerFragment() {
         binding.switchView.setOnCheckedChangeListener(object :CompoundButton.OnCheckedChangeListener{
             override fun onCheckedChanged(p0: CompoundButton?, p1: Boolean) {
                 if(p1) {
-                    setupNotchView()
+                    AccessbilityStaticClass.service?.enableSetupView()
                     binding.arrowView.isVisible = true
                     initViewValues()
                 }else {
@@ -139,28 +137,27 @@ class SetupNotchPositionFragment : DaggerFragment() {
     }
 
     fun onBackPressed() {
-        windowsView?.removeView()
+        AccessbilityStaticClass.service?.removeView()
         binding.arrowView.isVisible = false
     }
 
     private fun initViewValues() {
-        size = (context?.pxTodp(notchViewBinding.root.minimumWidth.toFloat())?.toFloat() ?: 0f)
+        size = 20f
         binding.sliderSeekbar.position = size /100
-        radius = (context?.pxTodp((notchViewBinding.root as? CardView)?.radius ?: 0f )?.toFloat() ?: 0f)
+        radius = 8f
         binding.sliderSeekbarRadius.position = radius/100
 
-        iniPositionListner()
+        initPositionListner()
     }
 
-    private fun iniPositionListner() {
+    private fun initPositionListner() {
         binding.sliderSeekbar.positionListener = { p ->
-            size = requireContext().dpToPx(p*100).toFloat()
-            notchViewBinding.root.minimumWidth = size.toInt()
-            notchViewBinding.root.minimumHeight = size.toInt()
+            size = p*100
+            AccessbilityStaticClass.service?.changeSize(size.toInt())
         }
         binding.sliderSeekbarRadius.positionListener = { p ->
-            radius = requireContext().dpToPx(p*100).toFloat()
-            (notchViewBinding.root as? CardView)?.radius = radius
+            radius = p*100
+            AccessbilityStaticClass.service?.updateRadius(radius.toInt())
         }
     }
 

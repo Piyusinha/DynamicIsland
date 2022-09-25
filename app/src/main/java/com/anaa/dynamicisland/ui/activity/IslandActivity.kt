@@ -1,12 +1,16 @@
 package com.anaa.dynamicisland.ui.activity
 
+import android.Manifest
+import android.accessibilityservice.AccessibilityServiceInfo
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.WindowManager
+import android.view.accessibility.AccessibilityManager
 import android.widget.ImageView
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultCallback
@@ -18,10 +22,13 @@ import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.anaa.dynamicisland.AccessbilityStaticClass
 import com.anaa.dynamicisland.MainActivity
 import com.anaa.dynamicisland.R
 import com.anaa.dynamicisland.databinding.ActivityIslandBinding
 import com.anaa.dynamicisland.databinding.ParentLayoutBinding
+import com.anaa.dynamicisland.ui.compose.IslandState
+import com.anaa.dynamicisland.ui.compose.utils.NotchIslandStateSealedClass
 import com.anaa.dynamicisland.ui.view.DynamicLayoutParams
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.coroutines.delay
@@ -47,7 +54,6 @@ class IslandActivity : DaggerAppCompatActivity() {
         binding = ActivityIslandBinding.inflate(layoutInflater)
         setContentView(binding.root)
         if(viewModel.isSetupDone()) {
-            createDemoView()
             initClickListener()
 
         }else{
@@ -59,11 +65,28 @@ class IslandActivity : DaggerAppCompatActivity() {
 
     private fun initClickListener() {
         binding.demo.setOnClickListener {
-            startAnimation()
+            AccessbilityStaticClass.service?.updateState(NotchIslandStateSealedClass.ChargingNotch(0,null))
         }
         binding.startAccessbilty.setOnClickListener {
-            startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+            if(!checkAccessibilityPermission()) {
+                startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+                return@setOnClickListener
+            }
+           AccessbilityStaticClass.service?.enableView()
         }
+    }
+
+    private fun checkAccessibilityPermission(): Boolean {
+        var isAccessibilityEnabled = false
+        (getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager).apply {
+            installedAccessibilityServiceList.forEach { installedService ->
+                installedService.resolveInfo.serviceInfo.apply {
+                    if (getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_ALL_MASK).any { it.resolveInfo.serviceInfo.packageName == packageName && it.resolveInfo.serviceInfo.name == name && permission == Manifest.permission.BIND_ACCESSIBILITY_SERVICE && it.resolveInfo.serviceInfo.packageName == packageName })
+                        isAccessibilityEnabled = true
+                }
+            }
+        }
+        return isAccessibilityEnabled
     }
 
     private lateinit var rootBinding : ParentLayoutBinding
@@ -71,28 +94,6 @@ class IslandActivity : DaggerAppCompatActivity() {
 
     private lateinit var defaultLayoutParams : WindowManager.LayoutParams
 
-
-    private fun createDemoView() {
-       windowsManager = getSystemService(WINDOW_SERVICE) as WindowManager
-       val li = getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater
-      rootBinding = DataBindingUtil.inflate(li,R.layout.parent_layout,null,false)
-       defaultLayoutParams = DynamicLayoutParams.getActivityLayoutParams(viewModel.getX(),viewModel.getY(), WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT,viewModel.getGravity())
-        windowsManager.addView(rootBinding.root,defaultLayoutParams);
-        setupCardViewSize()
-    }
-
-    private fun setupCardViewSize() {
-        rootBinding.root.minimumWidth = viewModel.getDimension().toInt()
-        rootBinding.root.minimumHeight = viewModel.getDimension().toInt()
-        rootBinding.constraintLayout2.minimumWidth = viewModel.getDimension().toInt()
-        rootBinding.constraintLayout2.minimumHeight = viewModel.getDimension().toInt()
-        (rootBinding.root as? CardView)?.radius = viewModel.getRadius()
-    }
-
-    private fun startAnimation() {
-        rootBinding.constraintLayout2.setTransition(R.id.charging_transition_start)
-        inflateChargeLayout(75, rootBinding)
-    }
     private fun inflateChargeLayout(level: Int?, layout: ParentLayoutBinding) {
         rootBinding.constraintLayout2.transitionToEnd()
         layout.chargingLayout.root.isVisible = true

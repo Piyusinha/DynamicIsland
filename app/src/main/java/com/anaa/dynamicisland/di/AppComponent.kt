@@ -1,6 +1,7 @@
 package com.anaa.dynamicisland.di
 
 import android.app.Application
+import com.anaa.dynamicisland.accessibilty.ComposeAccessibiltyService
 import com.anaa.dynamicisland.application.DynamicApplication
 import dagger.BindsInstance
 import dagger.Component
@@ -20,4 +21,6 @@ interface AppComponent : AndroidInjector<DynamicApplication> {
         fun application(application: Application): Builder
         fun build(): AppComponent
     }
+    fun inject(composeAccessibiltyService: ComposeAccessibiltyService)
+
 }

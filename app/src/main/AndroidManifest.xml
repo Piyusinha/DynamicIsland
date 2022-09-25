@@ -33,7 +33,7 @@
         </activity>
 
         <service
-            android:name="com.anaa.dynamicisland.accessibilty.MyAccessibilityService"
+            android:name="com.anaa.dynamicisland.accessibilty.ComposeAccessibiltyService"
             android:enabled="true"
             android:exported="true"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
