@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:foregroundGravity="center"
+        android:layout_width="320dp"
+        android:layout_height="80dp"
+        android:minHeight="30dp"
+        android:paddingEnd="16dp"
+        android:background="@color/black">
+
+        <ImageView
+            android:layout_marginStart="24dp"
+            android:id="@+id/icon"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/airpodsl"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <TextView
+            android:textStyle="bold"
+            android:layout_marginStart="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Connected"
+            android:id="@+id/text"
+            android:textColor="#898989"
+            app:layout_constraintTop_toTopOf="@+id/icon"
+            app:layout_constraintStart_toEndOf="@id/icon"/>
+        <TextView
+            android:textStyle="bold"
+            android:layout_marginStart="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Piyush Airpod's"
+            android:textSize="18sp"
+            android:textColor="@color/white"
+            app:layout_constraintTop_toBottomOf="@id/text"
+            app:layout_constraintStart_toEndOf="@id/icon"/>
+        <ProgressBar
+            android:id="@+id/ringer_text"
+            android:textColor="@color/red"
+            android:textStyle="bold"
+            android:text="Silent"
+            android:textSize="14sp"
+            android:includeFontPadding="false"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/icon"
+            app:layout_constraintBottom_toBottomOf="@id/icon"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

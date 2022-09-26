@@ -6,8 +6,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.anaa.dynamicisland.R
 import com.anaa.dynamicisland.ui.compose.IslandState
 import com.anaa.dynamicisland.ui.compose.utils.NotchIslandStateSealedClass
+import kotlinx.coroutines.cancelChildren
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class ComposeViewModel: ViewModel() {
     private val _viewState: MutableState<NotchIslandStateSealedClass> = mutableStateOf(NotchIslandStateSealedClass.DefaultNotch)
@@ -30,6 +35,20 @@ class ComposeViewModel: ViewModel() {
 
     fun changeSize(size:Int) {
         _size.value = Size(size.dp.value,size.dp.value)
+    }
+
+    fun changeView(notchView: NotchIslandStateSealedClass) {
+        viewModelScope.coroutineContext.cancelChildren()
+        changeIsland(notchView)
+        gotoDefaultState()
+
+    }
+
+    private fun gotoDefaultState() {
+        viewModelScope.launch {
+            delay(3000)
+            changeIsland(NotchIslandStateSealedClass.DefaultNotch)
+        }
     }
 
 }
