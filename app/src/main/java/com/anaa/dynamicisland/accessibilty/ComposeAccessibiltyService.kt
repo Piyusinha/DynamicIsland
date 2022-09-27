@@ -214,7 +214,7 @@ class ComposeAccessibiltyService : AccessibilityService() {
     }
 
     fun updateState(islandState: NotchIslandStateSealedClass) {
-        composeViewModel.changeIsland(islandState)
+        composeViewModel.changeView(islandState)
     }
 
 

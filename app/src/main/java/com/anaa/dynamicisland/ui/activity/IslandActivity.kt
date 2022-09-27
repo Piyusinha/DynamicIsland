@@ -55,9 +55,7 @@ class IslandActivity : DaggerAppCompatActivity() {
     private fun initClickListener() {
         binding.demo.setOnClickListener {
             try {
-                lifecycleScope.coroutineContext.cancelChildren()
                 AccessbilityStaticClass.service?.updateState(NotchIslandStateSealedClass.ChargingNotch(0,null))
-                startTimer()
             }catch (e:Exception) {
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
@@ -65,9 +63,7 @@ class IslandActivity : DaggerAppCompatActivity() {
         }
         binding.ringerDemo.setOnClickListener {
             try {
-                lifecycleScope.coroutineContext.cancelChildren()
                 AccessbilityStaticClass.service?.updateState(NotchIslandStateSealedClass.BluetoothConnected(null))
-                startTimer()
             }catch (e:Exception) {
                 FirebaseCrashlytics.getInstance().recordException(e)
             }

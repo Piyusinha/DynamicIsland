@@ -15,9 +15,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.anaa.dynamicisland.accessibilty.viewModel.ComposeViewModel
+import com.anaa.dynamicisland.ui.compose.notchViewCompose.BluetoothDeviceExpandedView
+import com.anaa.dynamicisland.ui.compose.notchViewCompose.BluetoothDeviceView
+import com.anaa.dynamicisland.ui.compose.notchViewCompose.RingerIsland
+import com.anaa.dynamicisland.ui.compose.notchViewCompose.chargingIsland
 import com.anaa.dynamicisland.ui.compose.utils.NotchIslandStateSealedClass
 
 @Composable
@@ -68,7 +69,7 @@ fun DynamicIslandComposibleView(
             when (isLandState) {
                 is NotchIslandStateSealedClass.RingerNotch -> RingerIsland(isLandState,size,radiusFromSharedPref,notchType)
                 is NotchIslandStateSealedClass.ChargingNotch -> chargingIsland(isLandState,size,radiusFromSharedPref,notchType)
-                is NotchIslandStateSealedClass.DefaultNotch -> defaultIsland(size,roundedCorner)
+                is NotchIslandStateSealedClass.DefaultNotch -> DefaultIsland(size,roundedCorner)
                 is NotchIslandStateSealedClass.BluetoothConnected -> BluetoothDeviceView(
                     isLandState = isLandState,
                     size = size,
