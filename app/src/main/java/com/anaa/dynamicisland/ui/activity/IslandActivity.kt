@@ -4,14 +4,11 @@ import android.Manifest
 import android.accessibilityservice.AccessibilityServiceInfo
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.view.WindowManager
 import android.view.accessibility.AccessibilityManager
-import android.widget.ImageView
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.anaa.dynamicisland.AccessbilityStaticClass
@@ -19,10 +16,8 @@ import com.anaa.dynamicisland.BuildConfig
 import com.anaa.dynamicisland.MainActivity
 import com.anaa.dynamicisland.R
 import com.anaa.dynamicisland.databinding.ActivityIslandBinding
-import com.anaa.dynamicisland.databinding.ParentLayoutBinding
 import com.anaa.dynamicisland.fragments.SimpleDialog
 import com.anaa.dynamicisland.ui.compose.utils.NotchIslandStateSealedClass
-import com.google.firebase.FirebaseException
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.coroutines.cancelChildren
@@ -60,9 +55,7 @@ class IslandActivity : DaggerAppCompatActivity() {
     private fun initClickListener() {
         binding.demo.setOnClickListener {
             try {
-                lifecycleScope.coroutineContext.cancelChildren()
                 AccessbilityStaticClass.service?.updateState(NotchIslandStateSealedClass.ChargingNotch(0,null))
-                startTimer()
             }catch (e:Exception) {
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
@@ -70,9 +63,7 @@ class IslandActivity : DaggerAppCompatActivity() {
         }
         binding.ringerDemo.setOnClickListener {
             try {
-                lifecycleScope.coroutineContext.cancelChildren()
-                AccessbilityStaticClass.service?.updateState(NotchIslandStateSealedClass.RingerNotch("Ring",R.drawable.ic_leftnormal))
-                startTimer()
+                AccessbilityStaticClass.service?.updateState(NotchIslandStateSealedClass.BluetoothConnected(null))
             }catch (e:Exception) {
                 FirebaseCrashlytics.getInstance().recordException(e)
             }

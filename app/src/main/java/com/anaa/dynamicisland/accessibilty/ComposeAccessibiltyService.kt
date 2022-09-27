@@ -1,9 +1,11 @@
 package com.anaa.dynamicisland.accessibilty
 
 import android.accessibilityservice.AccessibilityService
+import android.bluetooth.BluetoothDevice
 import android.content.Intent
 import android.content.IntentFilter
 import android.media.AudioManager
+import android.util.Log
 import android.view.Gravity
 import android.view.WindowManager
 import android.view.accessibility.AccessibilityEvent
@@ -15,6 +17,8 @@ import com.anaa.dynamicisland.AccessbilityStaticClass
 import com.anaa.dynamicisland.R
 import com.anaa.dynamicisland.accessibilty.viewModel.ComposeViewModel
 import com.anaa.dynamicisland.application.DynamicApplication
+import com.anaa.dynamicisland.broadcast.bluetooth.BluetoothBroadcastReciever
+import com.anaa.dynamicisland.broadcast.bluetooth.BluetoothListener
 import com.anaa.dynamicisland.broadcast.charging.ChargeBroadcastReciever
 import com.anaa.dynamicisland.broadcast.charging.ChargingListener
 import com.anaa.dynamicisland.broadcast.ringer.RingerBroadcastReciever
@@ -109,12 +113,25 @@ class ComposeAccessibiltyService : AccessibilityService() {
             RingerBroadcastReciever.receiver,
             IntentFilter(AudioManager.RINGER_MODE_CHANGED_ACTION)
         )
+        registerReceiver(
+            BluetoothBroadcastReciever.broadcastReceiver,
+            IntentFilter(BluetoothDevice.ACTION_ACL_CONNECTED)
+        )
         setupBroadcastListner()
     }
 
     private fun setupBroadcastListner() {
         setupChargeListener()
         setupRingerListener()
+        setupBluetoothListener()
+    }
+
+    private fun setupBluetoothListener() {
+        BluetoothBroadcastReciever.setListener(object : BluetoothListener {
+            override fun onDeviceConnected(device: BluetoothDevice?) {
+                composeViewModel.changeView(NotchIslandStateSealedClass.BluetoothConnected(device))
+            }
+        })
     }
 
     private fun setupRingerListener() {
@@ -124,33 +141,20 @@ class ComposeAccessibiltyService : AccessibilityService() {
             }
 
             override fun onGeneral() {
-                scope.coroutineContext.cancelChildren()
-                composeViewModel.changeIsland(NotchIslandStateSealedClass.RingerNotch("Ring",R.drawable.ic_leftnormal))
-                gotoDefaultState()
+                composeViewModel.changeView(NotchIslandStateSealedClass.RingerNotch("Ring",R.drawable.ic_leftnormal))
             }
 
             override fun onSilent() {
-                scope.coroutineContext.cancelChildren()
-                composeViewModel.changeIsland(NotchIslandStateSealedClass.RingerNotch("Silent",R.drawable.ic_leftsilent_icon))
-                gotoDefaultState()
+                composeViewModel.changeView(NotchIslandStateSealedClass.RingerNotch("Silent",R.drawable.ic_leftsilent_icon))
             }
 
         })
     }
 
-    private fun gotoDefaultState() {
-        scope.launch {
-            delay(3000)
-            composeViewModel.changeIsland(NotchIslandStateSealedClass.DefaultNotch)
-        }
-    }
-
     private fun setupChargeListener() {
         ChargeBroadcastReciever.setListener(object : ChargingListener {
             override fun onChargeConnected(level: Int?) {
-                scope.coroutineContext.cancelChildren()
-                composeViewModel.changeIsland(NotchIslandStateSealedClass.ChargingNotch(level ?: 100,getBatteryIcon(level)))
-                gotoDefaultState()
+                composeViewModel.changeView(NotchIslandStateSealedClass.ChargingNotch(level ?: 100,getBatteryIcon(level)))
 
             }
             override fun onChargeDisconnected() {
@@ -210,7 +214,7 @@ class ComposeAccessibiltyService : AccessibilityService() {
     }
 
     fun updateState(islandState: NotchIslandStateSealedClass) {
-        composeViewModel.changeIsland(islandState)
+        composeViewModel.changeView(islandState)
     }
 
 
