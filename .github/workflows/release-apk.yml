@@ -25,23 +25,16 @@ jobs:
       - name: Build Project               
         run: ./gradlew assemble
         
-      - name: Build Release AAB      
-        run: ./gradlew bundleRelease   
-      
-      - name: Sign AAB              
-        uses: r0adkll/sign-android-release@v1
-        with:
-          releaseDirectory: app/build/outputs/bundle/release
-          signingKeyBase64: ${{ secrets.SIGN_KEY }}
-          alias: ${{ secrets.ALIAS }}
-          keyStorePassword: ${{ secrets.STORE_KEY_PASSWORD }}
-          keyPassword: ${{ secrets.KEY_PASSWORD }}
+      - name: Build Release APK      
+        run: ./gradlew assembleRelease   
           
-      - name: Upload app AAB
-        uses: actions/upload-artifact@v1
+      - name: upload artifact to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
-          name: app-release
-          path: app/build/outputs/bundle/release/app-release.aab
+          appId: ${{secrets.FIREBASE_APP_ID}}
+          token: ${{secrets.FIREBASE_TOKEN}}
+          groups: testers
+          file: app/build/outputs/apk/release/app-release-unsigned.apk
         
         
         
