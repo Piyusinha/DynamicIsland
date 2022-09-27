@@ -39,8 +39,8 @@ fun RingerIsland(
             contentDescription = null,
             modifier = Modifier.constrainAs(ringerImage) {
                 when (notchType) {
-                    0 -> start.linkTo(parent.start, (size.height + 10).dp)
-                    else -> start.linkTo(parent.start, 16.dp)
+                    0 -> start.linkTo(parent.start,margin = (size.height + 10).dp)
+                    else -> start.linkTo(parent.start, margin = 16.dp)
                 }
                 top.linkTo(parent.top)
                 bottom.linkTo(parent.bottom)
@@ -55,8 +55,8 @@ fun RingerIsland(
                 top.linkTo(parent.top)
                 bottom.linkTo(parent.bottom)
                 when (notchType) {
-                    0, 2 -> end.linkTo(parent.end, 16.dp)
-                    1 -> end.linkTo(parent.end, (size.height + 10).dp)
+                    0, 2 -> end.linkTo(parent.end,margin = 16.dp)
+                    1 -> end.linkTo(parent.end, margin =(size.height + 10).dp)
                 }
 
             })
