@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.view.accessibility.AccessibilityManager
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.ViewModelProvider
@@ -29,12 +30,16 @@ class PermissionFragment : DaggerFragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private var activityOverlayResult: ActivityResultLauncher<Intent> = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()) { result ->
-            if(result == null) {
-
-            }
+    val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            binding.cross.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.check))
+        } else {
+            binding.cross.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.xcross))
+        }
     }
+
 
     private val sharedViewModel by lazy {
         ViewModelProvider(requireActivity(),viewModelFactory)[MainActivityViewModel::class.java]
@@ -57,6 +62,7 @@ class PermissionFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupAccesbilityView()
+        setupBluetoothview()
         binding.accesibilty.setOnClickListener {
             if(checkAccessibilityPermission()) {
                 return@setOnClickListener
@@ -78,13 +84,24 @@ class PermissionFragment : DaggerFragment() {
         }
     }
 
+    private fun setupBluetoothview() {
+        binding.bluetoothPermission.setOnClickListener {
+            if(ContextCompat.checkSelfPermission(requireActivity(),Manifest.permission.BLUETOOTH_CONNECT) != 0) {
+                binding.cross.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.xcross))
+                requestPermissionLauncher.launch(Manifest.permission.BLUETOOTH_CONNECT)
+            } else {
+                binding.cross.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.check))
+            }
+        }
+
+    }
+
     private fun startDialogFragment() {
         SimpleDialog.newInstance("Accessibility", getString(R.string.message)).apply {
             buttonInterface = object : SimpleDialog.onButtonClick {
                 override fun okClicked() {
                     startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
                 }
-
                 override fun cancelClicked() {
 
                 }

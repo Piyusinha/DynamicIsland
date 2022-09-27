@@ -15,6 +15,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import com.anaa.dynamicisland.ui.compose.notchViewCompose.BluetoothDeviceExpandedView
+import com.anaa.dynamicisland.ui.compose.notchViewCompose.BluetoothDeviceView
+import com.anaa.dynamicisland.ui.compose.notchViewCompose.RingerIsland
+import com.anaa.dynamicisland.ui.compose.notchViewCompose.chargingIsland
 import com.anaa.dynamicisland.ui.compose.utils.NotchIslandStateSealedClass
 
 @Composable
@@ -49,21 +53,35 @@ fun DynamicIslandComposibleView(
             when (state) {
                 is NotchIslandStateSealedClass.RingerNotch -> Size(150.dp.value, sizeFromSharedPref.height)
                 is NotchIslandStateSealedClass.ChargingNotch-> Size(236.dp.value, sizeFromSharedPref.height)
-                is  NotchIslandStateSealedClass.DefaultNotch -> defaultSize
+                is NotchIslandStateSealedClass.DefaultNotch -> defaultSize
+                is NotchIslandStateSealedClass.BluetoothConnected -> Size(150.dp.value, sizeFromSharedPref.height)
+                is NotchIslandStateSealedClass.BluetoothExpanderConnected -> Size(320.dp.value,80.dp.value)
             }
         }
 
         Box(modifier = Modifier
             .size(size.width.dp, size.height.dp)
             .constrainAs(box) {
-                start.linkTo(parent.start)
+                bottom.linkTo(parent.bottom)
                 top.linkTo(parent.top)
                 end.linkTo(parent.end)
             }) {
             when (isLandState) {
                 is NotchIslandStateSealedClass.RingerNotch -> RingerIsland(isLandState,size,radiusFromSharedPref,notchType)
                 is NotchIslandStateSealedClass.ChargingNotch -> chargingIsland(isLandState,size,radiusFromSharedPref,notchType)
-                is NotchIslandStateSealedClass.DefaultNotch -> defaultIsland(size,roundedCorner)
+                is NotchIslandStateSealedClass.DefaultNotch -> DefaultIsland(size,roundedCorner)
+                is NotchIslandStateSealedClass.BluetoothConnected -> BluetoothDeviceView(
+                    isLandState = isLandState,
+                    size = size,
+                    notchType = notchType,
+                    radius = radiusFromSharedPref
+                )
+                is NotchIslandStateSealedClass.BluetoothExpanderConnected -> BluetoothDeviceExpandedView(
+                    isLandState = isLandState,
+                    size = size,
+                    notchType = notchType,
+                    radius = radiusFromSharedPref
+                )
             }
         }
     }
