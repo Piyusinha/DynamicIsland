@@ -1,0 +1,35 @@
+name: Manual Generate Debug APK
+on:
+  workflow_dispatch:
+    inputs:
+
+      baseUrl:
+        description: 'Base URL'
+        required: true
+        default: 'https://api.pennyup.club'
+
+jobs:
+
+  apk:
+    name: Generate Debug APK
+    runs-on: ubuntu-18.04
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu' # See 'Supported distributions' for available options
+          java-version: '11'
+
+      - name: Print Params Values
+        run: |
+          bash update_properties.sh ${{ github.event.inputs.baseUrl }}
+      - name: Assemble app debug APK
+        run: bash ./gradlew assembleDebug --stacktrace
+
+      - name: Upload app APK
+        uses: actions/upload-artifact@v1
+        with:
+          name: app-debug
+          path: app/build/outputs/apk/debug/app-debug.apk
