@@ -1,6 +1,7 @@
 package com.anaa.dynamicisland.ui.compose.utils
 
 import android.bluetooth.BluetoothDevice
+import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 
 sealed class NotchIslandStateSealedClass {
@@ -9,4 +10,5 @@ sealed class NotchIslandStateSealedClass {
     class RingerNotch(val text:String,val drawable: Int?) : NotchIslandStateSealedClass()
     class BluetoothConnected(val device: BluetoothDevice?) : NotchIslandStateSealedClass()
     class BluetoothExpanderConnected(val device: BluetoothDevice?) : NotchIslandStateSealedClass()
+    class MusicSmallView(val image: Bitmap) : NotchIslandStateSealedClass()
 }

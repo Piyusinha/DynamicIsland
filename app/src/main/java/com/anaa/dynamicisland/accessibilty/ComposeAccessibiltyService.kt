@@ -5,7 +5,7 @@ import android.bluetooth.BluetoothDevice
 import android.content.Intent
 import android.content.IntentFilter
 import android.media.AudioManager
-import android.util.Log
+import android.media.MediaMetadata
 import android.view.Gravity
 import android.view.WindowManager
 import android.view.accessibility.AccessibilityEvent
@@ -33,9 +33,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancelChildren
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -74,6 +71,7 @@ class ComposeAccessibiltyService : AccessibilityService() {
 
     override fun onServiceConnected() {
         AccessbilityStaticClass.service = this
+        (application as DynamicApplication).setAccessibilityService(this)
     }
 
 
@@ -238,6 +236,17 @@ class ComposeAccessibiltyService : AccessibilityService() {
             else -> R.drawable.ic_chargepercentage_0
         }
 
+    }
+
+    fun onMusicStartPlaying(metadata: MediaMetadata) {
+        val musicNotch = NotchIslandStateSealedClass.MusicSmallView(composeViewModel.getMediaBitmapData(metadata))
+        composeViewModel.defaultNotch = musicNotch
+        composeViewModel.changeView(musicNotch)
+    }
+
+    fun onMusicStopped() {
+        composeViewModel.defaultNotch = NotchIslandStateSealedClass.DefaultNotch
+        composeViewModel.changeView(composeViewModel.defaultNotch)
     }
 
 }

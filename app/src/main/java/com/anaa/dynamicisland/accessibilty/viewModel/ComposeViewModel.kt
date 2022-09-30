@@ -1,5 +1,7 @@
 package com.anaa.dynamicisland.accessibilty.viewModel
 
+import android.graphics.Bitmap
+import android.media.MediaMetadata
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -17,6 +19,7 @@ class ComposeViewModel: ViewModel() {
     private val _viewState: MutableState<NotchIslandStateSealedClass> = mutableStateOf(NotchIslandStateSealedClass.DefaultNotch)
     val viewState: State<NotchIslandStateSealedClass> = _viewState
 
+    var defaultNotch: NotchIslandStateSealedClass = NotchIslandStateSealedClass.DefaultNotch
 
     fun changeIsland(islandState: NotchIslandStateSealedClass) {
         _viewState.value = islandState
@@ -46,8 +49,13 @@ class ComposeViewModel: ViewModel() {
     private fun gotoDefaultState() {
         viewModelScope.launch {
             delay(3000)
-            changeIsland(NotchIslandStateSealedClass.DefaultNotch)
+            changeIsland(defaultNotch)
         }
+    }
+
+    fun getMediaBitmapData(metadata: MediaMetadata): Bitmap {
+        return metadata.getBitmap(MediaMetadata.METADATA_KEY_ART) ?: metadata.getBitmap(MediaMetadata.METADATA_KEY_ALBUM_ART) ?: metadata.getBitmap(MediaMetadata.METADATA_KEY_ALBUM_ART)
+
     }
 
 }

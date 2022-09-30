@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.anaa.dynamicisland.ui.compose.notchViewCompose.BluetoothDeviceExpandedView
 import com.anaa.dynamicisland.ui.compose.notchViewCompose.BluetoothDeviceView
+import com.anaa.dynamicisland.ui.compose.notchViewCompose.MusicIsland
 import com.anaa.dynamicisland.ui.compose.notchViewCompose.RingerIsland
 import com.anaa.dynamicisland.ui.compose.notchViewCompose.chargingIsland
 import com.anaa.dynamicisland.ui.compose.utils.NotchIslandStateSealedClass
@@ -56,6 +57,7 @@ fun DynamicIslandComposibleView(
                 is NotchIslandStateSealedClass.DefaultNotch -> defaultSize
                 is NotchIslandStateSealedClass.BluetoothConnected -> Size(150.dp.value, sizeFromSharedPref.height)
                 is NotchIslandStateSealedClass.BluetoothExpanderConnected -> Size(320.dp.value,80.dp.value)
+                is NotchIslandStateSealedClass.MusicSmallView -> Size(150.dp.value, sizeFromSharedPref.height)
             }
         }
 
@@ -82,6 +84,9 @@ fun DynamicIslandComposibleView(
                     notchType = notchType,
                     radius = radiusFromSharedPref
                 )
+                is NotchIslandStateSealedClass.MusicSmallView -> {
+                    MusicIsland(isLandState = isLandState, size = size, notchType = notchType, radius = radiusFromSharedPref)
+                }
             }
         }
     }
