@@ -104,6 +104,11 @@ dependencies {
 
     kapt "org.jetbrains.kotlinx:kotlinx-metadata-jvm:0.4.2"
 
+    testImplementation 'org.mockito:mockito-inline:2.13.0'
+
+    testImplementation 'org.mockito.kotlin:mockito-kotlin:4.0.0'
+//For runBlockingTest, CoroutineDispatcher etc.
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.2'
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
