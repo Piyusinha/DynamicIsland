@@ -72,15 +72,18 @@ class DynamicNotificationListenerService : NotificationListenerService() {
                     (application as DynamicApplication).composeAccessibiltyService?.onMusicStopped()
                 }
                 PlaybackState.STATE_STOPPED -> {
+                    musicIsPaused = true
                     currentMediaData = null
+                    (application as DynamicApplication).composeAccessibiltyService?.onMusicStopped()
                 }
             }
         }
 
         override fun onMetadataChanged(metadata: MediaMetadata?) {
             metadata?.let { metadata ->
-                if(musicIsPaused && currentMediaData?.getString(MediaMetadata.METADATA_KEY_TITLE) == metadata.getString(MediaMetadata.METADATA_KEY_TITLE)) return
+                if((musicIsPaused && currentMediaData?.getString(MediaMetadata.METADATA_KEY_TITLE) == metadata.getString(MediaMetadata.METADATA_KEY_TITLE))) return
                 try {
+                    currentMediaData = metadata
                     (application as DynamicApplication).composeAccessibiltyService?.onMusicStartPlaying(metadata)
                 } catch (e: RuntimeException) {
                     Log.e(TAG, "An error occurred reading the media metadata: $e")
@@ -151,6 +154,7 @@ class DynamicNotificationListenerService : NotificationListenerService() {
         mediaControllerCallback.let { mediaControllerCallback ->
             mediaController.registerCallback(mediaControllerCallback)
         }
+
     }
 
     private fun unregisterCallback(mediaController: MediaController?) {
