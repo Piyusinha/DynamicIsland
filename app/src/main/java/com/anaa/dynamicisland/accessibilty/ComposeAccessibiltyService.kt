@@ -29,6 +29,8 @@ import com.anaa.dynamicisland.ui.compose.utils.NotchIslandStateSealedClass
 import com.anaa.dynamicisland.ui.compose.utils.NotchViewHolder
 import com.anaa.dynamicisland.ui.view.DynamicLayoutParams
 import com.anaa.dynamicisland.utils.DynamixSharedPref
+import com.anaa.dynamicisland.utils.ScreenUtils
+import com.anaa.dynamicisland.utils.pxTodp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -92,7 +94,7 @@ class ComposeAccessibiltyService : AccessibilityService() {
         notchViewHolder = NotchViewHolder(applicationContext)
         composeViewModel = notchViewHolder.viewModel
         notchViewHolder.view.setContent {
-            DynamicIslandComposibleView(composeViewModel.viewState.value,Size(sharedPref.getDimension().dp.value,sharedPref.getDimension().dp.value), notch = sharedPref.getNotch(),sharedPref.getRadius().toInt())
+            DynamicIslandComposibleView(composeViewModel.viewState.value,Size(sharedPref.getDimension().dp.value,sharedPref.getDimension().dp.value), notch = sharedPref.getNotch(),sharedPref.getRadius().toInt(),applicationContext.pxTodp(sharedPref.getWidth()?.toFloat() ?: 300f))
         }
         windowsViewInflater = getSystemService(WINDOW_SERVICE) as WindowManager
         windowsViewInflater.addView(notchViewHolder.view,defaultLayoutParams)
@@ -174,7 +176,7 @@ class ComposeAccessibiltyService : AccessibilityService() {
                 composeViewModel.viewState.value,
                 composeViewModel.size.value,
                 notch = sharedPref.getNotch(),
-                roundedCorner = composeViewModel.radius.value
+                roundedCorner = composeViewModel.radius.value,
             )
         }
         windowsViewInflater = getSystemService(WINDOW_SERVICE) as WindowManager
@@ -239,7 +241,7 @@ class ComposeAccessibiltyService : AccessibilityService() {
     }
 
     fun onMusicStartPlaying(metadata: MediaMetadata) {
-        val musicNotch = NotchIslandStateSealedClass.MusicSmallView(composeViewModel.getMediaBitmapData(metadata))
+        val musicNotch = NotchIslandStateSealedClass.MusicSmallView(composeViewModel.getMediaBitmapData(metadata),metadata.getString(MediaMetadata.METADATA_KEY_TITLE),metadata.getString(MediaMetadata.METADATA_KEY_ARTIST))
         composeViewModel.defaultNotch = musicNotch
         composeViewModel.changeView(musicNotch)
     }
