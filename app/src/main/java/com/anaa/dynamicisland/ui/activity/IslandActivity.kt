@@ -7,7 +7,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
 import android.view.accessibility.AccessibilityManager
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -37,7 +39,15 @@ class IslandActivity : DaggerAppCompatActivity() {
         ViewModelProvider(this,viewModelFactory)[IslandViewModel::class.java]
     }
 
-
+    val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            binding.cross.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.check))
+        } else {
+            binding.cross.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.xcross))
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,6 +55,7 @@ class IslandActivity : DaggerAppCompatActivity() {
         setContentView(binding.root)
         if(viewModel.isSetupDone()) {
             initClickListener()
+            setupBluetoothview()
         }else{
             startActivity(Intent(this,MainActivity::class.java))
             finish()
@@ -70,6 +81,18 @@ class IslandActivity : DaggerAppCompatActivity() {
 
         }
         binding.dynamicSwitch.setOnCheckedChangeListener { _, b -> setupChangeListener(b)}
+        binding.bluetoothPermission.setOnClickListener {
+            if(ContextCompat.checkSelfPermission(this,Manifest.permission.BLUETOOTH_CONNECT) == 0) {
+                return@setOnClickListener
+            }
+            requestPermissionLauncher.launch(Manifest.permission.BLUETOOTH_CONNECT)
+        }
+        binding.notificationListenerService.setOnClickListener {
+            if(notificationListenerEnabled()) {
+                return@setOnClickListener
+            }
+            openNotificationListenerSettings()
+        }
     }
 
     private fun setupChangeListener(b: Boolean) {
@@ -147,5 +170,33 @@ class IslandActivity : DaggerAppCompatActivity() {
 
         }
         binding.dynamicSwitch.setOnCheckedChangeListener { _, b -> setupChangeListener(b) }
+        setupNotificationView()
     }
+
+    private fun notificationListenerEnabled(): Boolean {
+        return NotificationManagerCompat.getEnabledListenerPackages(this).contains(this.packageName)
+    }
+
+    private fun openNotificationListenerSettings() {
+        startActivity(Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"))
+    }
+
+    private fun setupNotificationView() {
+        if(notificationListenerEnabled()) {
+            binding.notificationCross.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.check))
+        }else{
+            binding.notificationCross.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.xcross))
+        }
+    }
+
+    private fun setupBluetoothview() {
+        if(ContextCompat.checkSelfPermission(this,Manifest.permission.BLUETOOTH_CONNECT) != 0) {
+            binding.cross.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.xcross))
+
+        } else {
+            binding.cross.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.check))
+        }
+
+    }
+
 }

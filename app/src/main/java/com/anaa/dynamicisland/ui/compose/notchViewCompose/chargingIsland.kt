@@ -41,8 +41,8 @@ fun chargingIsland(
             top.linkTo(parent.top)
             bottom.linkTo(parent.bottom)
             when (notchType) {
-                0 -> start.linkTo(parent.start, (size.height + 10).dp)
-                else -> start.linkTo(parent.start, 16.dp)
+                0 -> start.linkTo(parent.start,margin = (size.height + 10).dp)
+                else -> start.linkTo(parent.start,margin = 16.dp)
             }
 
         })
@@ -52,8 +52,8 @@ fun chargingIsland(
             contentScale = ContentScale.None,
             modifier = Modifier.constrainAs(chargingImage) {
                 when (notchType) {
-                    0, 2 -> end.linkTo(parent.end, 16.dp)
-                    1 -> end.linkTo(parent.end, (size.height + 10).dp)
+                    0, 2 -> end.linkTo(parent.end, margin = 16.dp)
+                    1 -> end.linkTo(parent.end,margin = (size.height + 10).dp)
                 }
 
                 top.linkTo(parent.top)
@@ -68,7 +68,7 @@ fun chargingIsland(
             fontWeight = FontWeight.Bold,
             modifier = Modifier.constrainAs(chargingValue) {
                 top.linkTo(parent.top)
-                end.linkTo(chargingImage.start, 8.dp)
+                end.linkTo(chargingImage.start, margin = 8.dp)
                 bottom.linkTo(parent.bottom)
             })
     }

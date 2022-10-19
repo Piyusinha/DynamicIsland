@@ -1,8 +1,11 @@
 package com.anaa.dynamicisland.application
 
+
 import com.anaa.dynamicisland.BuildConfig
+import com.anaa.dynamicisland.accessibilty.ComposeAccessibiltyService
 import com.anaa.dynamicisland.di.AppComponent
 import com.anaa.dynamicisland.di.DaggerAppComponent
+import com.anaa.dynamicisland.service.DynamicNotificationListenerService
 //import com.facebook.flipper.android.AndroidFlipperClient
 //import com.facebook.flipper.android.utils.FlipperUtils
 //import com.facebook.flipper.core.FlipperClient
@@ -16,6 +19,10 @@ import dagger.android.DaggerApplication
 class DynamicApplication: DaggerApplication() {
 
     lateinit var applicationComponent: AppComponent
+
+    var composeAccessibiltyService: ComposeAccessibiltyService ?= null
+
+    var notificationService: DynamicNotificationListenerService ?= null
 
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
       return applicationComponent
@@ -42,6 +49,14 @@ class DynamicApplication: DaggerApplication() {
     }
     fun getMainAppComponent(): AppComponent {
         return applicationComponent
+    }
+
+    fun setAccessibilityService(composeAccessibiltyService: ComposeAccessibiltyService) {
+        this.composeAccessibiltyService = composeAccessibiltyService
+    }
+
+    fun setNotificationServiceValue(notificationService: DynamicNotificationListenerService) {
+        this.notificationService = notificationService
     }
 
 }

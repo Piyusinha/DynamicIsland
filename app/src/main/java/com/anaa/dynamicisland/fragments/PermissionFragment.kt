@@ -2,6 +2,7 @@ package com.anaa.dynamicisland.fragments
 
 import android.Manifest
 import android.accessibilityservice.AccessibilityServiceInfo
+import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -13,6 +14,7 @@ import android.view.accessibility.AccessibilityManager
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.ViewModelProvider
@@ -70,10 +72,23 @@ class PermissionFragment : DaggerFragment() {
             startDialogFragment()
         }
         binding.confirmPosition.setOnClickListener {
-            if(!checkAccessibilityPermission()) {
+            if(!checkAccessibilityPermission() && ContextCompat.checkSelfPermission(requireActivity(),Manifest.permission.BLUETOOTH_CONNECT) != 0) {
                 return@setOnClickListener
             }
             sharedViewModel.changeFragment(WelcomeNotchType.newInstance())
+        }
+
+        binding.bluetoothPermission.setOnClickListener {
+            if(ContextCompat.checkSelfPermission(requireActivity(),Manifest.permission.BLUETOOTH_CONNECT) == 0) {
+                return@setOnClickListener
+            }
+            requestPermissionLauncher.launch(Manifest.permission.BLUETOOTH_CONNECT)
+        }
+        binding.notificationListenerService.setOnClickListener {
+            if(notificationListenerEnabled()) {
+                return@setOnClickListener
+            }
+            openNotificationListenerSettings()
         }
 
         val am = activity?.getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager?
@@ -84,14 +99,20 @@ class PermissionFragment : DaggerFragment() {
         }
     }
 
+    private fun setupNotificationView() {
+        if(notificationListenerEnabled()) {
+            binding.notificationCross.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.check))
+        }else{
+            binding.notificationCross.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.xcross))
+        }
+    }
+
     private fun setupBluetoothview() {
-        binding.bluetoothPermission.setOnClickListener {
-            if(ContextCompat.checkSelfPermission(requireActivity(),Manifest.permission.BLUETOOTH_CONNECT) != 0) {
-                binding.cross.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.xcross))
-                requestPermissionLauncher.launch(Manifest.permission.BLUETOOTH_CONNECT)
-            } else {
-                binding.cross.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.check))
-            }
+        if(ContextCompat.checkSelfPermission(requireActivity(),Manifest.permission.BLUETOOTH_CONNECT) != 0) {
+            binding.cross.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.xcross))
+
+        } else {
+            binding.cross.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.check))
         }
 
     }
@@ -129,6 +150,19 @@ class PermissionFragment : DaggerFragment() {
             }
         }
         return isAccessibilityEnabled
+    }
+
+    private fun notificationListenerEnabled(): Boolean {
+        return NotificationManagerCompat.getEnabledListenerPackages(requireActivity()).contains(requireActivity().packageName)
+    }
+
+    private fun openNotificationListenerSettings() {
+        startActivity(Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"))
+    }
+
+    override fun onResume() {
+        super.onResume()
+        setupNotificationView()
     }
 
     companion object {

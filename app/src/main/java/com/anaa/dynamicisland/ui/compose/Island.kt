@@ -23,13 +23,15 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 
 
 @Composable
-fun DefaultIsland(size: Size = Size(80.dp.value, 22.dp.value), roundedCorner: Int) {
+@Preview
+fun DefaultIsland(size: Size = Size(80.dp.value, 22.dp.value), roundedCorner: Int = 5) {
     ConstraintLayout(
         modifier = Modifier
             .height(size.height.dp)
