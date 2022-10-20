@@ -40,7 +40,7 @@ class FragmentsViewModel @Inject constructor(private val repository: FragmentRep
 
     fun onNotchClicked(selected: Boolean, adapterPosition: Int) {
         val list = repository.getNotchList()
-        list?.forEachIndexed { index, item ->
+        list.forEachIndexed { index, item ->
             if(item is NotchTypeData ) {
                 if(adapterPosition == index) item.isSelected = selected
                 else item.isSelected = false
