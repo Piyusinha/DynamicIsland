@@ -18,6 +18,13 @@ jobs:
         run: |
           chmod +x gradlew
           ./gradlew testDebugUnitTest jacocoTestReport
+       
+      - name: Get previous coverage
+        id: prevCoverage
+        uses: notiz-dev/github-action-json-property@release
+        with:
+          path: '.github/badges/currentCoverage.json'
+          prop_path: 'coverage'
           
       - name: Log coverage percentage
         uses: mshick/add-pr-comment@v1
@@ -34,5 +41,5 @@ jobs:
         with:
           paths: ${{ github.workspace }}/app/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml
           token: ${{ secrets.GIT_TOKEN }}
-          min-coverage-overall: 40
-          min-coverage-changed-files: 60
+          min-coverage-overall: ${{steps.prevCoverage.outputs.prop}}
+          min-coverage-changed-files: ${{steps.prevCoverage.outputs.prop}}
