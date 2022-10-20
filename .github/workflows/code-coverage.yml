@@ -26,6 +26,13 @@ jobs:
           chmod +x gradlew
           ./gradlew testDebugUnitTest jacocoTestReport
        
+      - name: Get previous coverage
+        id: prevCoverage
+        uses: notiz-dev/github-action-json-property@release
+        with:
+          path: '.github/badges/currentCoverage.json'
+          prop_path: 'coverage'
+
           
       - name: Log coverage percentage
         uses: mshick/add-pr-comment@v1
