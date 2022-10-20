@@ -16,8 +16,11 @@ jobs:
           distribution: 'zulu' # See 'Supported distributions' for available options
           java-version: '11'
           
-      - name: Get previous coverage
-        id: prevCoverage
-        uses: notiz-dev/github-action-json-property@release
+      - name: Read package.json
+        id: package
+        uses: juliangruber/read-file-action@v1
         with:
-          path: '/.github/badges/current_coverage.json'
+          path: '.github/badges/current_coverage.json'
+          
+      - name: Echo package.json
+        run: echo "${{ steps.package.outputs.content }}" 
