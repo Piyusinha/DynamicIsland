@@ -24,3 +24,11 @@ jobs:
           
       - name: Echo package.json
         run: echo "${{ steps.package.outputs.content }}" 
+        
+      - name: Value
+        id: coverage
+        uses: notiz-dev/github-action-json-property@release
+        with: 
+          path: '.github/badges/current_coverage.json'
+          prop_path: 'coverage'   
+      - run: echo ${{steps.coverage.outputs.prop}}
