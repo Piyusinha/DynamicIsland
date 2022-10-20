@@ -20,4 +20,4 @@ jobs:
         id: prevCoverage
         uses: notiz-dev/github-action-json-property@release
         with:
-          path: '${{ github.workspace }}/.github/badges/current_coverage.json'
+          path: '/.github/badges/current_coverage.json'
