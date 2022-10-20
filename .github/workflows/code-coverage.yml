@@ -14,17 +14,18 @@ jobs:
           distribution: 'zulu' # See 'Supported distributions' for available options
           java-version: '11'
           
+      - name: Get previous coverage
+        id: prevCoverage
+        uses: notiz-dev/github-action-json-property@release
+        with:
+          path: '.github/badges/current_coverage.json'
+          prop_path: 'coverage'    
+          
       - name: Run Coverage
         run: |
           chmod +x gradlew
           ./gradlew testDebugUnitTest jacocoTestReport
        
-      - name: Get previous coverage
-        id: prevCoverage
-        uses: notiz-dev/github-action-json-property@release
-        with:
-          path: '.github/badges/currentCoverage.json'
-          prop_path: 'coverage'
           
       - name: Log coverage percentage
         uses: mshick/add-pr-comment@v1
