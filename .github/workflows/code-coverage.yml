@@ -17,7 +17,16 @@ jobs:
       - name: Run Coverage
         run: |
           chmod +x gradlew
-          ./gradlew --no-daemon clean testDebugUnitTest jacocoTestReport
+          ./gradlew testDebugUnitTest jacocoTestReport
+          
+      - name: Log coverage percentage
+        uses: mshick/add-pr-comment@v1
+        with:
+          message: |
+            "coverage = ${{ steps.jacoco.outputs.coverage }}"
+          repo-token: ${{ secrets.GIT_TOKEN }}
+          repo-token-user-login: 'github-actions[bot]' # The user.login for temporary GitHub tokens
+          allow-repeats: false 
 
       - name: Add coverage to PR
         id: jacoco
