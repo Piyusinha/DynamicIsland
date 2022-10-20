@@ -1,0 +1,34 @@
+name: Read Json
+
+on: [workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+         ref: ${{ github.head_ref }}
+         
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu' # See 'Supported distributions' for available options
+          java-version: '11'
+          
+      - name: Read package.json
+        id: package
+        uses: juliangruber/read-file-action@v1
+        with:
+          path: '.github/badges/current_coverage.json'
+          
+      - name: Echo package.json
+        run: echo "${{ steps.package.outputs.content }}" 
+        
+      - name: Value
+        id: coverage
+        uses: notiz-dev/github-action-json-property@release
+        with: 
+          path: '.github/badges/current_coverage.json'
+          prop_path: 'coverage'   
+      - run: echo ${{steps.coverage.outputs.prop}}
