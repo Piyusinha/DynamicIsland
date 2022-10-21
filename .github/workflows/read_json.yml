@@ -15,7 +15,7 @@ jobs:
         uses: jsdaniell/create-json@1.1.2
         with:
           name: "current_coverage.json"
-          json: '{"coverage":100}'
+          json: '{"coverage":${{0.04*100}}}'
           dir: '.github/badges/'    
     
       - name: Commit files
