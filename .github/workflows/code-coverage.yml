@@ -54,14 +54,10 @@ jobs:
           json: '{"coverage":${{ steps.jacoco.outputs.coverage }} }'
           dir: '.github/badges/'    
     
-      - name: Commit files
+      - name: Commit And Push files
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add -A
-          git commit -m "Update Coverage"
-        
-      - name: Push changes
-        uses: ad-m/github-push-action@v0.6.0
-        with:
-          github_token: ${{ github.token }}     
+          git config user.name 'github-actions'
+          git config user.email 'github-actions@github.com'
+          git add .
+          git commit --no-verify --allow-empty -am "Update Coverage"
+          git push --no-verify   
