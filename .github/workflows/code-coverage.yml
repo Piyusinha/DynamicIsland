@@ -45,7 +45,8 @@ jobs:
         uses: cicirello/jacoco-badge-generator@v2
         with:
           jacoco-csv-file: >
-            ${{ github.workspace }}/app/build/reports/jacoco/jacocoTestReport/jacocoTestReport.csv
+            app/build/reports/jacoco/jacocoTestReport/jacocoTestReport.csv
+            build/reports/jacoco/test/jacocoTestReport.csv
   
       - name: Create Coverage File
         id: create-json
