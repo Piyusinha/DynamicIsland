@@ -16,19 +16,19 @@ class FragmentViewModelTest {
     @Mock
     lateinit var fragmentRepository: FragmentRepository
 
-    private lateinit var viewModel2: FragmentsViewModel
+    private lateinit var viewModel: FragmentsViewModel
 
     @Before
     fun setup(){
-        viewModel2 = FragmentsViewModel(fragmentRepository)
+        viewModel = FragmentsViewModel(fragmentRepository)
     }
 
     @Test
     fun `Setup Notch`() {
         val notch = NOTCH.PUNCH_CENTER
-        viewModel2.setupNotch(notch)
+        viewModel.setupNotch(notch)
         whenever(fragmentRepository.getNotch()).thenReturn(notch.ordinal)
-        Assert.assertEquals(notch.ordinal, viewModel2.getSavedNotch())
+        Assert.assertEquals(notch.ordinal, viewModel.getSavedNotch())
 
     }
 
