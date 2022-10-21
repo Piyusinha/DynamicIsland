@@ -23,7 +23,7 @@ import com.anaa.dynamicisland.ui.compose.utils.NotchIslandStateSealedClass
 @Composable
 fun chargingIsland(
     isLandState: NotchIslandStateSealedClass.ChargingNotch,
-    size: Size = Size(236.dp.value, 30.dp.value),
+    size: Size = Size(237.dp.value, 30.dp.value),
     radius: Int = 10,
     notchType: Int
 ) {
