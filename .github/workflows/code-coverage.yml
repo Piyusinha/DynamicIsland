@@ -44,9 +44,7 @@ jobs:
         id: jacoco
         uses: cicirello/jacoco-badge-generator@v2
         with:
-          jacoco-csv-file: >
-            app/build/reports/jacoco/jacocoTestReport/jacocoTestReport.csv
-            build/reports/jacoco/test/jacocoTestReport.csv
+          jacoco-csv-file: app/build/reports/jacoco/jacocoTestReport/jacocoTestReport.csv
   
       - name: Create Coverage File
         id: create-json
