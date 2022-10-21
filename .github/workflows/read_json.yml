@@ -9,12 +9,14 @@ jobs:
       - uses: actions/checkout@v3
         with:
          ref: ${{ github.head_ref }}
-      - uses: shaneapowell/github-tweak-the-json@v1
-        with: 
-          action: write
-          filename: '.github/badges/current_coverage.json'
-          field: coverage
-          value: 100
+          
+      - name: create-json
+        id: create-json
+        uses: jsdaniell/create-json@1.1.2
+        with:
+          name: "current_coverage.json"
+          json: '{"coverage":100}'
+          dir: '.github/badges/'    
     
       - name: Commit files
         run: |
