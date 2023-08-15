@@ -98,9 +98,9 @@ fun DynamicIslandComposibleView(
                 is NotchIslandStateSealedClass.MusicSmallView -> {
                     MusicIsland(isLandState = isLandState, size = size, notchType = notchType, radius = radiusFromSharedPref)
                 }
-                is NotchIslandStateSealedClass.MusicExpanderView -> {
-                    MusicBigIsland(isLandState = isLandState, size = size , notchType = notchType, radius = radiusFromSharedPref)
-                }
+//                is NotchIslandStateSealedClass.MusicExpanderView -> {
+//                    MusicBigIsland(isLandState = isLandState, size = size , notchType = notchType, radius = radiusFromSharedPref)
+//                }
             }
         }
     }
